@@ -21,7 +21,10 @@ export const metadata: Metadata = {
   description:
     "TL・乙女向けASMR・ゲームの厳選作品を紹介。評価・ランキング・セール情報もまとめてチェック。",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-256.png", type: "image/png", sizes: "256x256" },
+    ],
   },
 };
 
