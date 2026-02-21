@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { SearchResultCard } from "@/components/search-result-card";
+import { FeaturedBanners } from "@/components/featured-banners";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useSearch } from "@/hooks/use-search";
@@ -30,7 +31,18 @@ import type {
   PriceFilter,
 } from "@/lib/search";
 
-function SearchContentInner() {
+interface SearchContentProps {
+  bannerData?: {
+    saleThumbnail?: string | null;
+    saleMaxDiscountRate?: number | null;
+    saleTargetDate?: string | null;
+    mainWorkSaleEndDate?: string | null;
+    recommendationThumbnail?: string | null;
+    recommendationDate?: string | null;
+  };
+}
+
+function SearchContentInner({ bannerData }: SearchContentProps) {
   const searchParams = useSearchParams();
   const isMobile = useIsMobile();
   const [isPending, startTransition] = useTransition();
@@ -154,6 +166,16 @@ function SearchContentInner() {
 
   return (
     <>
+      {/* 今日のおすすめ & セール特集バナー */}
+      <FeaturedBanners
+        saleThumbnail={bannerData?.saleThumbnail}
+        saleMaxDiscountRate={bannerData?.saleMaxDiscountRate}
+        saleTargetDate={bannerData?.saleTargetDate}
+        mainWorkSaleEndDate={bannerData?.mainWorkSaleEndDate}
+        recommendationThumbnail={bannerData?.recommendationThumbnail}
+        recommendationDate={bannerData?.recommendationDate}
+      />
+
       {/* 検索フォーム */}
       <div className="mb-4">
         <div className="relative">
@@ -411,12 +433,12 @@ function SearchContentInner() {
   );
 }
 
-export function SearchContent() {
+export function SearchContent({ bannerData }: SearchContentProps) {
   return (
     <Suspense
       fallback={<p className="text-muted-foreground">読み込み中...</p>}
     >
-      <SearchContentInner />
+      <SearchContentInner bannerData={bannerData} />
     </Suspense>
   );
 }

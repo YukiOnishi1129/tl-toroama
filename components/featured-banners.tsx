@@ -112,7 +112,7 @@ export function FeaturedBanners({
         </Link>
 
         {/* セール特集（右） */}
-        <Link href="/sale">
+        <Link href="/sale/tokushu">
           <Card className="overflow-hidden border border-rose-500/30 hover:border-rose-500/50 transition-all h-full">
             {/* スマホ: 画像大きめ + オーバーレイテキスト */}
             <div className="relative md:hidden">
