@@ -23,6 +23,11 @@
   --ring: #E8A0BF;
   --radius: 0.75rem;
 
+  /* CTAボタン（primaryより濃いローズで視認性UP） */
+  --cta: #D88EA8;
+  --cta-hover: #C97D98;
+  --cta-foreground: #ffffff;
+
   /* カスタムカラー */
   --sale: #FF6B6B;
   --sale-foreground: #ffffff;
@@ -50,6 +55,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-cta-foreground: var(--cta-foreground);
   --color-sale: var(--sale);
   --color-sale-foreground: var(--sale-foreground);
   --radius-sm: calc(var(--radius) - 4px);

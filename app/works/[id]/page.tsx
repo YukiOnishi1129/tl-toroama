@@ -328,7 +328,7 @@ export default async function WorkDetailPage({ params }: Props) {
                       productId={ctaPlatform === "dlsite" ? work.dlsiteProductId || undefined : undefined}
                       workId={work.id}
                       disabled={!ctaUrl}
-                      className={`w-full py-4 text-lg font-bold text-white ${ctaIsOnSale ? "bg-orange-500 hover:bg-orange-600" : "bg-primary hover:bg-primary/90"}`}
+                      className={`w-full py-4 text-lg font-bold text-white ${ctaIsOnSale ? "bg-orange-500 hover:bg-orange-600" : "bg-cta hover:bg-cta-hover"}`}
                     >
                       {getCtaLabel(work.genre, work.category)}
                     </AffiliateLink>
@@ -518,7 +518,7 @@ export default async function WorkDetailPage({ params }: Props) {
                           productId={work.dlsiteProductId || undefined}
                           workId={work.id}
                           disabled={!work.dlsiteUrl}
-                          className={`font-bold text-white ${work.discountRateDlsite && work.discountRateDlsite > 0 ? "bg-orange-500 hover:bg-orange-600" : "bg-primary hover:bg-primary/90"}`}
+                          className={`font-bold text-white ${work.discountRateDlsite && work.discountRateDlsite > 0 ? "bg-orange-500 hover:bg-orange-600" : "bg-cta hover:bg-cta-hover"}`}
                         >
                           {getCtaLabel(work.genre, work.category)}
                         </AffiliateLink>
@@ -558,7 +558,7 @@ export default async function WorkDetailPage({ params }: Props) {
                           url={work.fanzaUrl || ""}
                           workId={work.id}
                           disabled={!work.fanzaUrl}
-                          className={`font-bold text-white ${work.discountRateFanza && work.discountRateFanza > 0 ? "bg-orange-500 hover:bg-orange-600" : "bg-primary hover:bg-primary/90"}`}
+                          className={`font-bold text-white ${work.discountRateFanza && work.discountRateFanza > 0 ? "bg-orange-500 hover:bg-orange-600" : "bg-cta hover:bg-cta-hover"}`}
                         >
                           {getCtaLabel(work.genre, work.category)}
                         </AffiliateLink>
@@ -642,7 +642,7 @@ export default async function WorkDetailPage({ params }: Props) {
                     productId={ctaPlatform === "dlsite" ? work.dlsiteProductId || undefined : undefined}
                     workId={work.id}
                     disabled={!ctaUrl}
-                    className={`w-full py-5 text-xl font-bold text-white ${ctaIsOnSale ? "bg-orange-500 hover:bg-orange-600" : "bg-primary hover:bg-primary/90"}`}
+                    className={`w-full py-5 text-xl font-bold text-white ${ctaIsOnSale ? "bg-orange-500 hover:bg-orange-600" : "bg-cta hover:bg-cta-hover"}`}
                   >
                     {getCtaLabel(work.genre, work.category)}
                   </AffiliateLink>
