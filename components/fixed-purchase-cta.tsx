@@ -79,8 +79,11 @@ export function FixedPurchaseCta({
   category,
 }: FixedPurchaseCtaProps) {
   const getCheaperOption = () => {
-    if (priceDlsite && priceFanza) {
-      if (priceDlsite <= priceFanza) {
+    const hasDlsite = priceDlsite != null && dlsiteUrl;
+    const hasFanza = priceFanza != null && fanzaUrl;
+
+    if (hasDlsite && hasFanza) {
+      if (priceDlsite <= priceFanza!) {
         return {
           platform: "DLsite",
           price: priceDlsite,
@@ -92,14 +95,14 @@ export function FixedPurchaseCta({
       }
       return {
         platform: "FANZA",
-        price: priceFanza,
+        price: priceFanza!,
         originalPrice: originalPriceFanza,
         url: fanzaUrl,
         discountRate: discountRateFanza,
         saleEndDate: saleEndDateFanza,
       };
     }
-    if (priceDlsite)
+    if (hasDlsite)
       return {
         platform: "DLsite",
         price: priceDlsite,
@@ -108,10 +111,10 @@ export function FixedPurchaseCta({
         discountRate: discountRateDlsite,
         saleEndDate: saleEndDateDlsite,
       };
-    if (priceFanza)
+    if (hasFanza)
       return {
         platform: "FANZA",
-        price: priceFanza,
+        price: priceFanza!,
         originalPrice: originalPriceFanza,
         url: fanzaUrl,
         discountRate: discountRateFanza,
