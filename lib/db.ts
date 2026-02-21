@@ -8,13 +8,19 @@
 import {
   getWorks,
   getCirclesData,
+  getDailyRecommendationsData,
+  getSaleFeaturesData,
   type DbWork as ParquetDbWork,
   type DbCircle as ParquetDbCircle,
+  type DbDailyRecommendation as ParquetDbDailyRecommendation,
+  type DbSaleFeature as ParquetDbSaleFeature,
 } from "./parquet-loader";
 
 // 型のエクスポート（互換性維持）
 export type DbWork = ParquetDbWork;
 export type DbCircle = ParquetDbCircle;
+export type DbDailyRecommendation = ParquetDbDailyRecommendation;
+export type DbSaleFeature = ParquetDbSaleFeature;
 
 export interface DbActor {
   name: string;
@@ -665,6 +671,26 @@ export async function getSimilarWorksByTags(
 
   const result = matches.slice(0, limit).map((m) => m.work);
   return enrichWorksWithCircleName(result);
+}
+
+// 最新のセール特集データを取得
+export async function getLatestSaleFeature(): Promise<DbSaleFeature | null> {
+  const features = await getSaleFeaturesData();
+  if (features.length === 0) return null;
+  const sorted = features.sort((a, b) =>
+    b.target_date.localeCompare(a.target_date),
+  );
+  return sorted[0] || null;
+}
+
+// 最新の今日のおすすめデータを取得
+export async function getLatestDailyRecommendation(): Promise<DbDailyRecommendation | null> {
+  const recommendations = await getDailyRecommendationsData();
+  if (recommendations.length === 0) return null;
+  const sorted = recommendations.sort((a, b) =>
+    b.target_date.localeCompare(a.target_date),
+  );
+  return sorted[0] || null;
 }
 
 // DB接続を閉じる（互換性のためのスタブ）

@@ -94,10 +94,12 @@ async function main() {
   // キャッシュディレクトリ作成
   mkdirSync(CACHE_DIR, { recursive: true });
 
-  // TL-Toroama用: worksとcirclesの2ファイルのみ
+  // TL-Toroama用: works, circles + 特集データ
   const files = [
     "works.parquet",
     "circles.parquet",
+    "daily_recommendations.parquet",
+    "sale_features.parquet",
   ];
 
   // BigIntをNumberに変換するreplacer

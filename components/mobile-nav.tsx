@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Home, Search, Flame, Star, Mic } from "lucide-react";
+import { Home, Search, Flame, Trophy, Mic } from "lucide-react";
 
 const navItems = [
   { href: "/", icon: Home, label: "ホーム" },
   { href: "/search", icon: Search, label: "検索" },
-  { href: "/search?sale=true", icon: Flame, label: "セール" },
-  { href: "/search?sort=rating", icon: Star, label: "おすすめ" },
+  { href: "/sale", icon: Flame, label: "セール" },
+  { href: "/recommendations", icon: Trophy, label: "おすすめ" },
   { href: "/cv", icon: Mic, label: "声優" },
 ];
 

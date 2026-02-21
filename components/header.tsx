@@ -18,6 +18,8 @@ export function Header() {
 
         {/* ナビゲーション */}
         <nav className="hidden items-center gap-8 lg:flex">
+          <NavLink href="/sale">セール</NavLink>
+          <NavLink href="/recommendations">おすすめ</NavLink>
           <NavLink href="/search">検索</NavLink>
           <NavLink href="/circles">サークル</NavLink>
           <NavLink href="/cv">声優</NavLink>

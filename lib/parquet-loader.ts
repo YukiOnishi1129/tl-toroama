@@ -14,6 +14,8 @@ const CACHE_DIR = join(process.cwd(), ".cache/data");
 // キャッシュ用
 let worksCache: DbWork[] | null = null;
 let circlesCache: DbCircle[] | null = null;
+let dailyRecommendationsCache: DbDailyRecommendation[] | null = null;
+let saleFeaturesCache: DbSaleFeature[] | null = null;
 
 // 型定義
 export interface DbWork {
@@ -87,6 +89,44 @@ export interface DbCircle {
   work_count: number;
 }
 
+export interface DbDailyRecommendation {
+  id: number;
+  target_date: string;
+  headline: string | null;
+  asmr_works:
+    | { work_id: number; reason: string; target_audience: string }[]
+    | null;
+  game_works:
+    | { work_id: number; reason: string; target_audience: string }[]
+    | null;
+  total_works_count: number;
+  asmr_count: number;
+  game_count: number;
+}
+
+export interface DbSaleFeature {
+  id: number;
+  target_date: string;
+  main_work_id: number | null;
+  main_headline: string | null;
+  main_reason: string | null;
+  main_category: string | null;
+  sub1_work_id: number | null;
+  sub1_one_liner: string | null;
+  sub1_category: string | null;
+  sub2_work_id: number | null;
+  sub2_one_liner: string | null;
+  sub2_category: string | null;
+  cheapest_work_ids: number[] | null;
+  high_discount_work_ids: number[] | null;
+  high_rating_work_ids: number[] | null;
+  total_sale_count: number;
+  dlsite_count: number;
+  fanza_count: number;
+  max_discount_rate: number;
+  ogp_image_url: string | null;
+}
+
 /**
  * JSONキャッシュファイルを読み込む
  */
@@ -123,9 +163,39 @@ export async function getCirclesData(): Promise<DbCircle[]> {
 }
 
 /**
+ * デイリーおすすめデータを取得（キャッシュ付き）
+ */
+export async function getDailyRecommendationsData(): Promise<
+  DbDailyRecommendation[]
+> {
+  if (dailyRecommendationsCache === null) {
+    dailyRecommendationsCache = loadJson<DbDailyRecommendation>(
+      "daily_recommendations.json"
+    );
+    console.log(
+      `Loaded ${dailyRecommendationsCache.length} daily recommendations from cache`
+    );
+  }
+  return dailyRecommendationsCache;
+}
+
+/**
+ * セール特集データを取得（キャッシュ付き）
+ */
+export async function getSaleFeaturesData(): Promise<DbSaleFeature[]> {
+  if (saleFeaturesCache === null) {
+    saleFeaturesCache = loadJson<DbSaleFeature>("sale_features.json");
+    console.log(`Loaded ${saleFeaturesCache.length} sale features from cache`);
+  }
+  return saleFeaturesCache;
+}
+
+/**
  * キャッシュをクリアする（テスト用）
  */
 export function clearCache(): void {
   worksCache = null;
   circlesCache = null;
+  dailyRecommendationsCache = null;
+  saleFeaturesCache = null;
 }

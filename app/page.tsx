@@ -2,6 +2,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { HorizontalScrollSection } from "@/components/horizontal-scroll-section";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   getNewWorks,
   getSaleWorks,
@@ -13,9 +14,12 @@ import {
   getVoiceRankingWorks,
   getGameRankingWorks,
   getHighRatedWorks,
+  getLatestSaleFeature,
+  getLatestDailyRecommendation,
 } from "@/lib/db";
 import { dbWorkToWork, dbActorToActor, dbTagToTag } from "@/lib/types";
 import Link from "next/link";
+import { Flame, Trophy, ChevronRight, Sparkles } from "lucide-react";
 
 export const dynamic = "force-static";
 
@@ -31,6 +35,8 @@ export default async function Home() {
     dbFanzaRanking,
     dbActors,
     dbTags,
+    saleFeature,
+    dailyRecommendation,
   ] = await Promise.all([
     getSaleWorks(12),
     getNewWorks(12),
@@ -42,6 +48,8 @@ export default async function Home() {
     getFanzaRankingWorks(12),
     getActors(),
     getTags(),
+    getLatestSaleFeature(),
+    getLatestDailyRecommendation(),
   ]);
 
   // 型変換
@@ -61,6 +69,57 @@ export default async function Home() {
       <Header />
 
       <main className="mx-auto max-w-7xl px-6 py-4">
+        {/* セール特集 & 今日のおすすめ バナー */}
+        {(saleFeature || dailyRecommendation) && (
+          <section className="mb-8 grid gap-3 sm:grid-cols-2">
+            {saleFeature && (
+              <Link href="/sale">
+                <Card className="overflow-hidden border border-red-300/40 hover:border-red-400/60 transition-all h-full">
+                  <CardContent className="flex items-center gap-3 p-4">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-50 shrink-0">
+                      <Flame className="h-5 w-5 text-red-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <Sparkles className="h-3.5 w-3.5 text-red-500" />
+                        <span className="text-sm font-bold text-foreground">
+                          セール特集
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {saleFeature.total_sale_count}作品がセール中
+                        {saleFeature.max_discount_rate > 0 &&
+                          ` ・ 最大${saleFeature.max_discount_rate}%OFF`}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-red-400 shrink-0" />
+                  </CardContent>
+                </Card>
+              </Link>
+            )}
+            {dailyRecommendation && (
+              <Link href="/recommendations">
+                <Card className="overflow-hidden border border-amber-300/40 hover:border-amber-400/60 transition-all h-full">
+                  <CardContent className="flex items-center gap-3 p-4">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-50 shrink-0">
+                      <Trophy className="h-5 w-5 text-amber-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-bold text-foreground">
+                        今日のおすすめ
+                      </span>
+                      <p className="text-xs text-muted-foreground line-clamp-1">
+                        {dailyRecommendation.headline || "編集部が厳選した作品"}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-amber-400 shrink-0" />
+                  </CardContent>
+                </Card>
+              </Link>
+            )}
+          </section>
+        )}
+
         {/* ボイス・ASMRランキング */}
         {voiceRanking.length > 0 && (
           <HorizontalScrollSection
