@@ -41,14 +41,14 @@ function getCategoryLabel(genre: string | null | undefined, category: string | n
 
 function getCtaLabel(genre: string | null | undefined, category: string | null | undefined): string {
   if (genre) {
-    if (genre.includes("音声")) return "試聴してみる";
-    if (genre.includes("ゲーム")) return "体験版で遊ぶ";
+    if (genre.includes("音声")) return "🎧 試聴してみる";
+    if (genre.includes("ゲーム")) return "🎮 体験版で遊ぶ";
   }
   if (category) {
     const cat = category.toLowerCase();
-    if (cat === "asmr" || cat === "音声作品") return "試聴してみる";
-    if (cat === "game" || cat === "ゲーム") return "体験版で遊ぶ";
-    if (cat === "動画" || cat === "video") return "サンプルを見る";
+    if (cat === "asmr" || cat === "音声作品") return "🎧 試聴してみる";
+    if (cat === "game" || cat === "ゲーム") return "🎮 体験版で遊ぶ";
+    if (cat === "動画" || cat === "video") return "🎬 サンプルを見る";
   }
   return "詳細を見る";
 }
@@ -170,7 +170,7 @@ export default async function WorkDetailPage({ params }: Props) {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-32 md:pb-0">
       <Header />
 
       {/* セール中スティッキーバナー（モバイル） */}
@@ -188,7 +188,7 @@ export default async function WorkDetailPage({ params }: Props) {
         <Breadcrumb items={breadcrumbItems} />
 
         {/* ヒーローセクション */}
-        <div className="relative mb-6 overflow-hidden rounded-2xl">
+        <div className="relative mb-6 overflow-hidden rounded-lg">
           <img
             src={work.thumbnailUrl || "https://placehold.co/800x450/fff8f6/8b7d72?text=No+Image"}
             alt={work.title}
@@ -204,22 +204,20 @@ export default async function WorkDetailPage({ params }: Props) {
               {getCategoryLabel(work.genre, work.category)}
             </Badge>
           )}
+          {/* 高評価・レビュー数バッジ */}
           <div className="absolute bottom-4 left-4 flex gap-2">
             {work.ratingDlsite && work.ratingDlsite >= 4.5 && (
-              <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500/90 text-white text-xs font-bold">
+              <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500/90 text-white text-xs font-bold backdrop-blur-sm">
                 ★ 高評価
+              </div>
+            )}
+            {work.reviewCountDlsite && work.reviewCountDlsite >= 10 && (
+              <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-black/70 text-white text-xs font-medium backdrop-blur-sm">
+                💬 {work.reviewCountDlsite.toLocaleString()}件のレビュー
               </div>
             )}
           </div>
         </div>
-
-        {/* サンプル画像 */}
-        {work.sampleImages.length > 0 && (
-          <div className="mb-6">
-            <h2 className="mb-3 text-lg font-bold text-foreground font-heading">サンプル画像</h2>
-            <SampleImageGallery images={work.sampleImages} title={work.title} />
-          </div>
-        )}
 
         <div className="space-y-6">
           {/* タイトル・基本情報 */}
@@ -274,7 +272,7 @@ export default async function WorkDetailPage({ params }: Props) {
               </div>
             )}
 
-            {/* CTA */}
+            {/* ファーストビューCTA（評価・レビュー数付き） */}
             {(() => {
               const dlPrice = dlsiteFinalPrice || work.priceDlsite;
               const fzPrice = fanzaFinalPrice || work.priceFanza;
@@ -301,6 +299,8 @@ export default async function WorkDetailPage({ params }: Props) {
               }
 
               const ctaIsOnSale = ctaDiscountRate && ctaDiscountRate > 0;
+              const rating = work.ratingDlsite || work.ratingFanza;
+              const reviewCount = work.reviewCountDlsite || work.reviewCountFanza;
 
               if (!ctaUrl) return null;
 
@@ -311,6 +311,20 @@ export default async function WorkDetailPage({ params }: Props) {
                       <div className="flex items-center gap-2 mb-2">
                         <Badge variant="sale" className="text-sm px-2 py-1">{ctaDiscountRate}%OFF</Badge>
                         <span className="text-sm font-bold text-orange-600">今だけの特別価格！</span>
+                      </div>
+                    )}
+                    {/* 評価・レビュー数 */}
+                    {rating && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-1">
+                          <span className="text-amber-500">★</span>
+                          <span className="font-bold text-foreground">{rating.toFixed(1)}</span>
+                        </div>
+                        {reviewCount && reviewCount > 0 && (
+                          <span className="text-sm text-muted-foreground">
+                            ({reviewCount.toLocaleString()}件のレビュー)
+                          </span>
+                        )}
                       </div>
                     )}
                     <div className="flex items-baseline gap-2 mb-3">
@@ -350,6 +364,14 @@ export default async function WorkDetailPage({ params }: Props) {
             )}
           </div>
 
+          {/* サンプル画像ギャラリー（タグの後） */}
+          {work.sampleImages.length > 1 && (
+            <SampleImageGallery
+              images={work.sampleImages.slice(1)}
+              title={work.title}
+            />
+          )}
+
           {/* AIおすすめ理由 */}
           {work.aiRecommendReason && (
             <Card className="bg-secondary/50">
@@ -374,11 +396,11 @@ export default async function WorkDetailPage({ params }: Props) {
             </Card>
           )}
 
-          {/* こんな人におすすめ */}
+          {/* 🎯 こんな人におすすめ */}
           {work.aiTargetAudience && (
             <Card className="bg-pink-50 border-pink-200">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-bold text-foreground">こんな人におすすめ</CardTitle>
+                <CardTitle className="text-sm font-bold text-foreground">🎯 こんな人におすすめ</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-foreground">{work.aiTargetAudience}</p>
@@ -398,11 +420,23 @@ export default async function WorkDetailPage({ params }: Props) {
             </Card>
           )}
 
-          {/* とろあま編集部レビュー */}
+          {/* ⚠️ 注意点 */}
+          {work.aiWarnings && (
+            <Card className="bg-amber-50 border-amber-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-bold text-foreground">⚠️ 注意点</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-foreground">{work.aiWarnings}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 📝 とろあま編集部レビュー */}
           {work.aiReview && (
             <Card className="bg-linear-to-br from-pink-50 to-rose-50 border-pink-200">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-bold text-foreground">とろあま編集部レビュー</CardTitle>
+                <CardTitle className="text-sm font-bold text-foreground">📝 とろあま編集部レビュー</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-foreground leading-relaxed">{work.aiReview}</p>
@@ -410,11 +444,11 @@ export default async function WorkDetailPage({ params }: Props) {
             </Card>
           )}
 
-          {/* ユーザー評価 */}
+          {/* ⭐ ユーザー評価 */}
           {(work.ratingDlsite || work.ratingFanza) && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">ユーザー評価</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">⭐ ユーザー評価</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-6">
@@ -459,7 +493,7 @@ export default async function WorkDetailPage({ params }: Props) {
 
           {/* 購入者の声から分かったこと */}
           {(work.aiAppealPoints || work.aiRecommendReason) && (
-            <div className="p-4 rounded-xl bg-linear-to-r from-pink-50 to-rose-50 border border-pink-200">
+            <div className="p-4 rounded-lg bg-linear-to-r from-pink-50 to-rose-50 border border-pink-200">
               <p className="text-sm font-bold text-foreground mb-1">
                 購入者の声から分かったこと
               </p>
@@ -657,10 +691,10 @@ export default async function WorkDetailPage({ params }: Props) {
             <p className="text-sm text-muted-foreground">発売日: {work.releaseDate}</p>
           )}
 
-          {/* 同じCVの人気作品 */}
+          {/* 🎤 同じCVの人気作品 */}
           {actorWorks.length > 0 && mainActor && (
             <section className="mt-10">
-              <h2 className="mb-4 text-lg font-bold text-foreground font-heading">{mainActor}の他の人気作品</h2>
+              <h2 className="mb-4 text-lg font-bold text-foreground font-heading">🎤 {mainActor}の他の人気作品</h2>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                 {actorWorks.map((actorWork) => (
                   <WorkCard key={actorWork.id} work={actorWork} />
@@ -669,10 +703,10 @@ export default async function WorkDetailPage({ params }: Props) {
             </section>
           )}
 
-          {/* 同じサークルの人気作品 */}
+          {/* 🏠 同じサークルの人気作品 */}
           {circleWorks.length > 0 && work.circleName && (
             <section className="mt-10">
-              <h2 className="mb-4 text-lg font-bold text-foreground font-heading">{work.circleName}の他の人気作品</h2>
+              <h2 className="mb-4 text-lg font-bold text-foreground font-heading">🏠 {work.circleName}の他の人気作品</h2>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                 {circleWorks.map((circleWork) => (
                   <WorkCard key={circleWork.id} work={circleWork} />
@@ -681,10 +715,10 @@ export default async function WorkDetailPage({ params }: Props) {
             </section>
           )}
 
-          {/* この作品が好きな人はこれも */}
+          {/* 🛒 この作品が好きな人はこれも */}
           {similarWorks.length > 0 && (
             <section className="mt-10">
-              <h2 className="mb-4 text-lg font-bold text-foreground font-heading">この作品が好きな人はこれも</h2>
+              <h2 className="mb-4 text-lg font-bold text-foreground font-heading">🛒 この作品が好きな人はこれも</h2>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                 {similarWorks.map((similarWork) => (
                   <WorkCard key={similarWork.id} work={similarWork} />
