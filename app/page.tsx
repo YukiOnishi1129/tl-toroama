@@ -1,65 +1,216 @@
-import Image from "next/image";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { HorizontalScrollSection } from "@/components/horizontal-scroll-section";
+import { Badge } from "@/components/ui/badge";
+import {
+  getNewWorks,
+  getSaleWorks,
+  getBargainWorks,
+  getActors,
+  getTags,
+  getDlsiteRankingWorks,
+  getFanzaRankingWorks,
+  getVoiceRankingWorks,
+  getGameRankingWorks,
+  getHighRatedWorks,
+} from "@/lib/db";
+import { dbWorkToWork, dbActorToActor, dbTagToTag } from "@/lib/types";
+import Link from "next/link";
 
-export default function Home() {
+export const dynamic = "force-static";
+
+export default async function Home() {
+  const [
+    dbSaleWorks,
+    dbNewWorks,
+    dbVoiceRanking,
+    dbGameRanking,
+    dbHighRated,
+    dbBargainWorks,
+    dbDlsiteRanking,
+    dbFanzaRanking,
+    dbActors,
+    dbTags,
+  ] = await Promise.all([
+    getSaleWorks(12),
+    getNewWorks(12),
+    getVoiceRankingWorks(12),
+    getGameRankingWorks(12),
+    getHighRatedWorks(4.5, 12),
+    getBargainWorks(500, 12),
+    getDlsiteRankingWorks(12),
+    getFanzaRankingWorks(12),
+    getActors(),
+    getTags(),
+  ]);
+
+  // 型変換
+  const saleWorks = dbSaleWorks.map(dbWorkToWork);
+  const newWorks = dbNewWorks.map(dbWorkToWork);
+  const voiceRanking = dbVoiceRanking.map(dbWorkToWork);
+  const gameRanking = dbGameRanking.map(dbWorkToWork);
+  const highRatedWorks = dbHighRated.map(dbWorkToWork);
+  const bargainWorks = dbBargainWorks.map(dbWorkToWork);
+  const dlsiteRanking = dbDlsiteRanking.map(dbWorkToWork);
+  const fanzaRanking = dbFanzaRanking.map(dbWorkToWork);
+  const actors = dbActors.slice(0, 12).map(dbActorToActor);
+  const tags = dbTags.slice(0, 20).map(dbTagToTag);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen bg-background">
+      <Header />
+
+      <main className="mx-auto max-w-7xl px-6 py-4">
+        {/* ボイス・ASMRランキング */}
+        {voiceRanking.length > 0 && (
+          <HorizontalScrollSection
+            title="いま人気のボイス作品"
+            subtitle="ASMR売上ランキング"
+            href="/search?genre=voice&sort=rank"
+            works={voiceRanking}
+            showRankBadge
+            rankBadgeColor="pink"
+          />
+        )}
+
+        {/* ゲームランキング */}
+        {gameRanking.length > 0 && (
+          <HorizontalScrollSection
+            title="おすすめゲーム"
+            subtitle="ゲーム売上ランキング"
+            href="/search?genre=game&sort=rank"
+            works={gameRanking}
+            showRankBadge
+            rankBadgeColor="rose"
+          />
+        )}
+
+        {/* 高評価 */}
+        {highRatedWorks.length > 0 && (
+          <HorizontalScrollSection
+            title="みんなが選んだ高評価"
+            subtitle="評価4.5以上の厳選作品"
+            href="/search?sort=rating"
+            works={highRatedWorks}
+          />
+        )}
+
+        {/* DLsiteランキング */}
+        {dlsiteRanking.length > 0 && (
+          <HorizontalScrollSection
+            title="DLsiteで人気"
+            subtitle="ランキング上位"
+            href="/search?platform=dlsite&sort=rank"
+            works={dlsiteRanking}
+            showRankBadge
+            rankBadgeColor="coral"
+          />
+        )}
+
+        {/* FANZAランキング */}
+        {fanzaRanking.length > 0 && (
+          <HorizontalScrollSection
+            title="FANZAで人気"
+            subtitle="ランキング上位"
+            href="/search?platform=fanza&sort=rank"
+            works={fanzaRanking}
+            showRankBadge
+            rankBadgeColor="coral"
+          />
+        )}
+
+        {/* ワンコイン */}
+        {bargainWorks.length > 0 && (
+          <HorizontalScrollSection
+            title="ワンコインで買える"
+            subtitle="500円以下のお得な作品"
+            href="/search?max=500"
+            works={bargainWorks}
+          />
+        )}
+
+        {/* セール中 */}
+        {saleWorks.length > 0 && (
+          <HorizontalScrollSection
+            title="セール中"
+            subtitle="今だけお得な作品"
+            href="/search?sort=discount"
+            works={saleWorks}
+          />
+        )}
+
+        {/* 新着作品 */}
+        <HorizontalScrollSection
+          title="新着作品"
+          subtitle="最新リリース"
+          href="/search?sort=new"
+          works={newWorks}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {/* 人気声優 */}
+        {actors.length > 0 && (
+          <section className="mb-12">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-foreground font-heading">人気声優</h2>
+              <Link
+                href="/cv"
+                className="flex items-center gap-1 text-sm text-primary transition-colors hover:text-primary/80"
+              >
+                もっと見る
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {actors.slice(0, 8).map((actor) => (
+                <Link
+                  key={actor.name}
+                  href={`/cv/${encodeURIComponent(actor.name)}`}
+                >
+                  <Badge
+                    variant="cv"
+                    className="cursor-pointer hover:opacity-80 text-sm py-1.5 px-3"
+                  >
+                    {actor.name}
+                    <span className="ml-1 opacity-70">({actor.workCount})</span>
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 人気タグ */}
+        {tags.length > 0 && (
+          <section className="mb-12">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-foreground font-heading">人気タグ</h2>
+              <Link
+                href="/tags"
+                className="flex items-center gap-1 text-sm text-primary transition-colors hover:text-primary/80"
+              >
+                もっと見る
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {tags.slice(0, 20).map((tag) => (
+                <Link
+                  key={tag.name}
+                  href={`/tags/${encodeURIComponent(tag.name)}`}
+                >
+                  <Badge
+                    variant="tag"
+                    className="cursor-pointer hover:opacity-80 text-sm py-1.5 px-3"
+                  >
+                    {tag.name}
+                    <span className="ml-1 opacity-70">({tag.workCount})</span>
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
+
+      <Footer />
     </div>
   );
 }
