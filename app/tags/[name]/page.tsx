@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const title = `「${decodedName}」タグの作品（${dbWorks.length}作品） | とろあま`;
-  const description = `「${decodedName}」タグのTL・乙女向け作品${dbWorks.length}作品を掲載。`;
+  const description = `「${decodedName}」タグのTL・乙女向けASMR＆ゲーム作品${dbWorks.length}作品を掲載。`;
 
   return { title, description };
 }

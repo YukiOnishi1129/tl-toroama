@@ -12,7 +12,7 @@ export function Header() {
             <span className="text-foreground">あま</span>
           </span>
           <span className="text-[9px] text-muted-foreground md:text-[10px]">
-            TL・乙女向け作品まとめ
+            TL・乙女向けASMR＆ゲームまとめ
           </span>
         </Link>
 

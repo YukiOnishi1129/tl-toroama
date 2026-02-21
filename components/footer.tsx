@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="mt-16 border-t border-border bg-secondary/50 py-8">
       <div className="mx-auto max-w-7xl px-6 text-center text-sm text-foreground/60">
-        <p className="mb-2 font-heading">とろあま - TL・乙女向け作品まとめ</p>
+        <p className="mb-2 font-heading">とろあま - TL・乙女向けASMR＆ゲームまとめ</p>
         <div className="mb-4 flex justify-center gap-4">
           <Link href="/privacy" className="hover:text-foreground">
             プライバシーポリシー

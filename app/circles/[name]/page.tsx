@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const genreText = dbCircle.main_genre ? `（${dbCircle.main_genre}）` : "";
   const title = `${decodedName}${genreText}の作品一覧（${dbWorks.length}作品） | とろあま`;
-  const description = `サークル「${decodedName}」のTL・乙女向け作品${dbWorks.length}作品を掲載。`;
+  const description = `サークル「${decodedName}」のTL・乙女向けASMR＆ゲーム作品${dbWorks.length}作品を掲載。`;
 
   return { title, description };
 }

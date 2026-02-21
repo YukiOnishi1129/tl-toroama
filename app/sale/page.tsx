@@ -31,7 +31,7 @@ import {
 export const metadata: Metadata = {
   title: "セール特集 | とろあま",
   description:
-    "今お得に買えるTL・乙女向け作品をまとめてチェック。割引率・価格順で並び替え可能。",
+    "今お得に買えるTL・乙女向けASMR＆ゲーム作品をまとめてチェック。割引率・価格順で並び替え可能。",
 };
 
 export const dynamic = "force-static";

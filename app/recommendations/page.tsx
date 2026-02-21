@@ -30,7 +30,7 @@ import {
 export const metadata: Metadata = {
   title: "今日のおすすめ | とろあま",
   description:
-    "編集部が厳選した今日のおすすめTL・乙女向け作品。ASMR・ゲームのTOP5をご紹介。",
+    "編集部が厳選した今日のおすすめTL・乙女向けASMR＆ゲーム作品。TOP5をご紹介。",
 };
 
 export const dynamic = "force-static";
