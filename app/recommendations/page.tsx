@@ -31,6 +31,27 @@ export const metadata: Metadata = {
   title: "今日のおすすめ | とろあま",
   description:
     "編集部が厳選した今日のおすすめTL・乙女向けASMR＆ゲーム作品。TOP5をご紹介。",
+  openGraph: {
+    title: "今日のおすすめ | とろあま",
+    description:
+      "編集部が厳選した今日のおすすめTL・乙女向けASMR＆ゲーム作品。TOP5をご紹介。",
+    type: "website",
+    images: [
+      {
+        url: "/ogp/recommendation_ogp.png",
+        width: 1520,
+        height: 800,
+        alt: "今日のおすすめ",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "今日のおすすめ | とろあま",
+    description:
+      "編集部が厳選した今日のおすすめTL・乙女向けASMR＆ゲーム作品。TOP5をご紹介。",
+    images: ["/ogp/recommendation_ogp.png"],
+  },
 };
 
 export const dynamic = "force-static";
