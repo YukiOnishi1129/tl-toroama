@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Script from "next/script";
 import { Zen_Maru_Gothic, Noto_Sans_JP } from "next/font/google";
 import { MobileNav } from "@/components/mobile-nav";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = "G-9LEXLXSTRL";
 
 const zenMaruGothic = Zen_Maru_Gothic({
   variable: "--font-heading",
@@ -35,6 +38,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" suppressHydrationWarning>
+      <head>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
+      </head>
       <body
         className={`${zenMaruGothic.variable} ${notoSansJP.variable} font-body antialiased`}
       >

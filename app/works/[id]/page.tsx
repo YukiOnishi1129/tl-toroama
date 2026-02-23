@@ -79,14 +79,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     work.isOnSale && work.maxDiscountRate
       ? `【${work.maxDiscountRate}%OFF】`
       : "";
-  const title = `${salePrefix}${work.title} | とろあま`;
+  const actorSuffix = work.actors.length > 0 ? `（${work.actors[0]}）` : "";
+  const title = `${salePrefix}${work.title}${actorSuffix} | とろあま`;
 
   const ratingText = work.ratingDlsite ? `評価${work.ratingDlsite.toFixed(1)}` : "";
+  const categoryLabel = getCategoryLabel(work.genre, work.category);
+  const metaParts = [
+    categoryLabel,
+    work.actors.length > 0 ? `CV:${work.actors.join("・")}` : null,
+    work.circleName ? `サークル:${work.circleName}` : null,
+  ].filter(Boolean);
+  const metaSuffix = metaParts.length > 0 ? `【${metaParts.join("｜")}】` : "";
   const baseDescription =
     work.aiAppealPoints || work.aiRecommendReason || work.aiSummary || "";
   const description = baseDescription
-    ? `${ratingText ? `${ratingText}の` : ""}${baseDescription}`
-    : `${work.title}の価格比較・セール情報・レビューをチェック`;
+    ? `${ratingText ? `${ratingText}の` : ""}${baseDescription}${metaSuffix}`
+    : `${work.title}の価格比較・セール情報・レビューをチェック${metaSuffix}`;
 
   const ogImage = work.thumbnailUrl || work.sampleImages[0] || null;
 
