@@ -90,7 +90,7 @@ function FeaturedWorkCard({
             <img
               src={
                 work.thumbnailUrl ||
-                "https://placehold.co/400x225/f4f4f5/71717a?text=No"
+                "https://placehold.co/400x225/fff8f6/8b7d72?text=No+Image"
               }
               alt={work.title}
               className="h-full w-full object-cover transition-transform hover:scale-105"
@@ -348,7 +348,7 @@ export default async function SalePage() {
                         <img
                           src={
                             work.thumbnailUrl ||
-                            "https://placehold.co/200x200/f4f4f5/71717a?text=No"
+                            "https://placehold.co/200x200/fff8f6/8b7d72?text=No+Image"
                           }
                           alt={work.title}
                           className="h-full w-full object-cover transition-transform group-hover:scale-105"

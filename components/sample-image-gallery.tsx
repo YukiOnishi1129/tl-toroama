@@ -30,9 +30,10 @@ export function SampleImageGallery({ images, title }: SampleImageGalleryProps) {
             className="block overflow-hidden rounded-xl border border-border hover:border-primary transition-colors cursor-pointer"
           >
             <img
-              src={imageUrl}
+              src={imageUrl || "https://placehold.co/600x400/fff8f6/8b7d72?text=No+Image"}
               alt={`${title} サンプル ${index + 1}`}
               className="w-full h-auto object-contain hover:scale-[1.02] transition-transform"
+              onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/fff8f6/8b7d72?text=No+Image"; }}
             />
           </button>
         ))}

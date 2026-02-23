@@ -44,7 +44,7 @@ export function SearchResultCard({ item }: SearchResultCardProps) {
         {/* サムネイル */}
         <div className="relative">
           <img
-            src={item.img}
+            src={item.img || "https://placehold.co/400x300/fff8f6/8b7d72?text=No+Image"}
             alt={item.t}
             className="aspect-[4/3] w-full object-cover"
             loading="lazy"

@@ -50,7 +50,7 @@ export function FeaturedBanners({
               {recommendationThumbnail ? (
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
-                    src={recommendationThumbnail}
+                    src={recommendationThumbnail || "https://placehold.co/400x300/fff8f6/8b7d72?text=No+Image"}
                     alt=""
                     className="w-full h-full object-cover"
                   />
@@ -86,7 +86,7 @@ export function FeaturedBanners({
               {recommendationThumbnail ? (
                 <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden">
                   <img
-                    src={recommendationThumbnail}
+                    src={recommendationThumbnail || "https://placehold.co/400x300/fff8f6/8b7d72?text=No+Image"}
                     alt=""
                     className="w-full h-full object-cover"
                   />
@@ -119,7 +119,7 @@ export function FeaturedBanners({
               {saleThumbnail ? (
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
-                    src={saleThumbnail}
+                    src={saleThumbnail || "https://placehold.co/400x300/fff8f6/8b7d72?text=No+Image"}
                     alt=""
                     className="w-full h-full object-cover"
                   />
@@ -155,7 +155,7 @@ export function FeaturedBanners({
               {saleThumbnail ? (
                 <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden">
                   <img
-                    src={saleThumbnail}
+                    src={saleThumbnail || "https://placehold.co/400x300/fff8f6/8b7d72?text=No+Image"}
                     alt=""
                     className="w-full h-full object-cover"
                   />

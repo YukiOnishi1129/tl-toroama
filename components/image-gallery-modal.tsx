@@ -132,10 +132,11 @@ export function ImageGalleryModal({
         onTouchEnd={handleTouchEnd}
       >
         <img
-          src={images[currentIndex]}
+          src={images[currentIndex] || "https://placehold.co/600x400/fff8f6/8b7d72?text=No+Image"}
           alt={title ? `${title} ${currentIndex + 1}` : `画像 ${currentIndex + 1}`}
           className="max-w-full max-h-[70vh] sm:max-h-[85vh] object-contain select-none"
           draggable={false}
+          onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/fff8f6/8b7d72?text=No+Image"; }}
         />
       </div>
 
@@ -170,9 +171,10 @@ export function ImageGalleryModal({
               }`}
             >
               <img
-                src={img}
+                src={img || "https://placehold.co/100x100/fff8f6/8b7d72?text=No"}
                 alt={`サムネイル ${idx + 1}`}
                 className="w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.src = "https://placehold.co/100x100/fff8f6/8b7d72?text=No"; }}
               />
             </button>
           ))}

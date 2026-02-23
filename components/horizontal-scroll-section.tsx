@@ -197,6 +197,11 @@ export function HorizontalScrollSection({
                       "https://placehold.co/600x314/fff8f6/8b7d72?text=No+Image"
                     }
                     alt={work.title}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://placehold.co/600x314/fff8f6/8b7d72?text=No+Image";
+                    }}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
 

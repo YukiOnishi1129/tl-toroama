@@ -8,6 +8,7 @@ import { SaleTimer } from "@/components/sale-timer";
 import { SaleBannerCountdown } from "@/components/sale-banner-countdown";
 import { FixedPurchaseCta } from "@/components/fixed-purchase-cta";
 import { SampleImageGallery } from "@/components/sample-image-gallery";
+import { HeroImage } from "@/components/hero-image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -189,10 +190,10 @@ export default async function WorkDetailPage({ params }: Props) {
 
         {/* ヒーローセクション */}
         <div className="relative mb-6 overflow-hidden rounded-lg">
-          <img
-            src={work.thumbnailUrl || "https://placehold.co/800x450/fff8f6/8b7d72?text=No+Image"}
+          <HeroImage
+            src={work.thumbnailUrl}
             alt={work.title}
-            className="w-full max-h-[500px] object-contain bg-secondary/30"
+            className="w-full max-h-125 object-contain bg-secondary/30"
           />
           {isOnSale && work.maxDiscountRate && work.maxDiscountRate > 0 && (
             <Badge variant="sale" className="absolute top-4 left-4 text-lg px-3 py-1">
