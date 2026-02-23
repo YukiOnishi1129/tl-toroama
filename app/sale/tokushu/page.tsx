@@ -156,7 +156,8 @@ function FeaturedWorkCard({
               url={sampleUrl}
               workId={work.id}
               size="sm"
-              className="flex-1 w-full text-xs font-bold text-white"
+              variant="outline"
+              className="flex-1 w-full text-xs font-bold border-2 border-cta text-cta hover:bg-cta/10"
             >
               <Play className="h-3 w-3 mr-1" />
               {isASMR ? "試聴してみる" : "体験版で遊ぶ"}
@@ -164,7 +165,7 @@ function FeaturedWorkCard({
             </AffiliateLink>
           )}
           <Link href={`/works/${work.id}`} className="flex-1">
-            <button className="w-full rounded-lg bg-primary hover:bg-primary/90 text-white text-xs font-bold py-2 px-3 transition-colors">
+            <button className="w-full rounded-xl bg-cta hover:bg-cta-hover text-white text-xs font-bold py-2 px-3 transition-colors shadow-sm">
               詳細を見る
             </button>
           </Link>

@@ -212,7 +212,8 @@ function RecommendationCard({
               url={sampleUrl}
               workId={work.id}
               size="sm"
-              className="flex-1 w-full text-xs font-bold text-white"
+              variant="outline"
+              className="flex-1 w-full text-xs font-bold border-2 border-cta text-cta hover:bg-cta/10"
             >
               <Play className="h-3 w-3 mr-1" />
               {isASMR ? "試聴してみる" : "体験版で遊ぶ"}
@@ -220,7 +221,7 @@ function RecommendationCard({
             </AffiliateLink>
           )}
           <Link href={`/works/${work.id}`} className="flex-1">
-            <button className="w-full rounded-lg bg-primary hover:bg-primary/90 text-white text-xs font-bold py-2 px-3 transition-colors">
+            <button className="w-full rounded-xl bg-cta hover:bg-cta-hover text-white text-xs font-bold py-2 px-3 transition-colors shadow-sm">
               詳細を見る
             </button>
           </Link>
@@ -310,17 +311,27 @@ export default async function RecommendationsPage() {
     );
   }
 
-  // 作品データを取得
-  const asmrWorkIds = (recommendation.asmr_works || []).map((w) => w.work_id);
-  const gameWorkIds = (recommendation.game_works || []).map((w) => w.work_id);
+  // 作品データを取得（全work_idをまとめて取得し、genreで再分類）
+  const allRecWorkIds = [
+    ...(recommendation.asmr_works || []).map((w) => w.work_id),
+    ...(recommendation.game_works || []).map((w) => w.work_id),
+  ];
+  const uniqueIds = [...new Set(allRecWorkIds)];
+  const allDbWorks = await getWorksByIds(uniqueIds);
 
-  const [asmrDbWorks, gameDbWorks] = await Promise.all([
-    getWorksByIds(asmrWorkIds),
-    getWorksByIds(gameWorkIds),
-  ]);
+  // genreベースで再分類（バッチの分類に依存しない）
+  const asmrWorks = allDbWorks
+    .filter((w) => w.genre === "音声")
+    .map(dbWorkToWork);
+  const gameWorks = allDbWorks
+    .filter((w) => w.genre === "ゲーム")
+    .map(dbWorkToWork);
 
-  const asmrWorks = asmrDbWorks.map(dbWorkToWork);
-  const gameWorks = gameDbWorks.map(dbWorkToWork);
+  // おすすめ理由のマップ（元のasmr_works/game_worksから統合）
+  const allRecommendations = [
+    ...(recommendation.asmr_works || []),
+    ...(recommendation.game_works || []),
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -348,7 +359,7 @@ export default async function RecommendationsPage() {
           title="癒されたいならこの音声"
           icon={Headphones}
           works={asmrWorks}
-          recommendations={recommendation.asmr_works || []}
+          recommendations={allRecommendations}
           isASMR={true}
         />
 
@@ -357,7 +368,7 @@ export default async function RecommendationsPage() {
           title="遊ぶならこのゲーム"
           icon={Gamepad2}
           works={gameWorks}
-          recommendations={recommendation.game_works || []}
+          recommendations={allRecommendations}
           isASMR={false}
         />
 
