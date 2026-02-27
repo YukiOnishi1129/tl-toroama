@@ -10,10 +10,12 @@ import {
   getCirclesData,
   getDailyRecommendationsData,
   getSaleFeaturesData,
+  getVoiceActorFeaturesData,
   type DbWork as ParquetDbWork,
   type DbCircle as ParquetDbCircle,
   type DbDailyRecommendation as ParquetDbDailyRecommendation,
   type DbSaleFeature as ParquetDbSaleFeature,
+  type DbVoiceActorFeature as ParquetDbVoiceActorFeature,
 } from "./parquet-loader";
 
 // 型のエクスポート（互換性維持）
@@ -21,6 +23,7 @@ export type DbWork = ParquetDbWork;
 export type DbCircle = ParquetDbCircle;
 export type DbDailyRecommendation = ParquetDbDailyRecommendation;
 export type DbSaleFeature = ParquetDbSaleFeature;
+export type DbVoiceActorFeature = ParquetDbVoiceActorFeature;
 
 export interface DbActor {
   name: string;
@@ -691,6 +694,32 @@ export async function getLatestDailyRecommendation(): Promise<DbDailyRecommendat
     b.target_date.localeCompare(a.target_date),
   );
   return sorted[0] || null;
+}
+
+// 声優名で声優特集データを取得
+export async function getVoiceActorFeatureByName(
+  actorName: string,
+): Promise<DbVoiceActorFeature | null> {
+  const features = await getVoiceActorFeaturesData();
+  return (
+    features.find((f) => f.name === actorName && f.is_active === 1) || null
+  );
+}
+
+// 全声優特集データを取得（作品数順）
+export async function getAllVoiceActorFeatures(): Promise<
+  DbVoiceActorFeature[]
+> {
+  const features = await getVoiceActorFeaturesData();
+  return features
+    .filter((f) => f.is_active === 1)
+    .sort((a, b) => b.total_work_count - a.total_work_count);
+}
+
+// 全声優特集名を取得（generateStaticParams用）
+export async function getAllVoiceActorFeatureNames(): Promise<string[]> {
+  const features = await getVoiceActorFeaturesData();
+  return features.filter((f) => f.is_active === 1).map((f) => f.name);
 }
 
 // DB接続を閉じる（互換性のためのスタブ）

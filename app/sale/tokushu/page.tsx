@@ -26,11 +26,35 @@ import {
   Gamepad2,
 } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "セール特集 | とろあま",
-  description:
-    "今お得に買えるTL・乙女向けASMR＆ゲーム作品をまとめてチェック。割引率・価格順で並び替え可能。",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const saleFeature = await getLatestSaleFeature();
+
+  const title = "セール特集 | とろあま";
+  const description = saleFeature?.main_headline
+    ? `${saleFeature.main_headline} - セール中のおすすめTL・乙女作品を厳選。迷ったらここから選べばハズレなし。`
+    : "今お得に買えるTL・乙女向けASMR＆ゲーム作品をまとめてチェック。割引率・価格順で並び替え可能。";
+
+  const ogpImageUrl = saleFeature?.ogp_image_url || undefined;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: ogpImageUrl
+        ? [{ url: ogpImageUrl, width: 1200, height: 630 }]
+        : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogpImageUrl ? [ogpImageUrl] : [],
+    },
+  };
+}
 
 export const dynamic = "force-static";
 

@@ -19,6 +19,8 @@ import {
   getPopularWorksByCircle,
   getPopularWorksByActor,
   getSimilarWorksByTags,
+  getVoiceActorFeatureByName,
+  getWorksByIds,
 } from "@/lib/db";
 import { dbWorkToWork } from "@/lib/types";
 import Link from "next/link";
@@ -151,14 +153,37 @@ export default async function WorkDetailPage({ params }: Props) {
   const relatedWorks = dbRelatedWorks.map(dbWorkToWork);
 
   const mainActor = work.actors?.[0];
-  const [dbCircleWorks, dbActorWorks, dbSimilarWorks] = await Promise.all([
+  const [dbCircleWorks, dbActorWorks, dbSimilarWorks, voiceActorFeature] = await Promise.all([
     work.circleId ? getPopularWorksByCircle(work.circleId, work.id, 4) : Promise.resolve([]),
     mainActor ? getPopularWorksByActor(mainActor, work.id, 4) : Promise.resolve([]),
     getSimilarWorksByTags(work.id, work.aiTags || [], 4),
+    mainActor ? getVoiceActorFeatureByName(mainActor) : Promise.resolve(null),
   ]);
   const circleWorks = dbCircleWorks.map(dbWorkToWork);
   const actorWorks = dbActorWorks.map(dbWorkToWork);
   const similarWorks = dbSimilarWorks.map(dbWorkToWork);
+
+  // 声優特集のおすすめ作品を取得（自分自身を除く、最大4件）
+  const voiceActorRecommendedWorks = voiceActorFeature?.recommended_works
+    ? await (async () => {
+        const recWorkIds = voiceActorFeature.recommended_works!
+          .map((r) => r.work_id)
+          .filter((id) => id !== work.id)
+          .slice(0, 4);
+        if (recWorkIds.length === 0) return [];
+        const dbWorks = await getWorksByIds(recWorkIds);
+        const worksMap = new Map(dbWorks.map((w) => [w.id, dbWorkToWork(w)]));
+        // recommended_worksの順序を維持しつつreasonを付与
+        return recWorkIds
+          .map((id) => {
+            const w = worksMap.get(id);
+            if (!w) return null;
+            const rec = voiceActorFeature.recommended_works!.find((r) => r.work_id === id);
+            return { ...w, recommendReason: rec?.reason || null };
+          })
+          .filter((w): w is NonNullable<typeof w> => w !== null);
+      })()
+    : [];
 
   const isOnSale = work.isOnSale;
   const saleEndDate = work.saleEndDateDlsite || work.saleEndDateFanza || null;
@@ -700,8 +725,27 @@ export default async function WorkDetailPage({ params }: Props) {
             <p className="text-sm text-muted-foreground">発売日: {work.releaseDate}</p>
           )}
 
-          {/* 🎤 同じCVの人気作品 */}
-          {actorWorks.length > 0 && mainActor && (
+          {/* 🎤 この声優のおすすめ作品（声優特集データ） */}
+          {voiceActorRecommendedWorks.length > 0 && mainActor && (
+            <section className="mt-10">
+              <h2 className="mb-4 text-lg font-bold text-foreground font-heading">🎤 {mainActor}のおすすめ作品</h2>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+                {voiceActorRecommendedWorks.map((recWork) => (
+                  <div key={recWork.id} className="flex flex-col">
+                    <WorkCard work={recWork} />
+                    {recWork.recommendReason && (
+                      <p className="mt-1.5 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {recWork.recommendReason}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 🎤 同じCVの人気作品（声優特集がない場合のフォールバック） */}
+          {voiceActorRecommendedWorks.length === 0 && actorWorks.length > 0 && mainActor && (
             <section className="mt-10">
               <h2 className="mb-4 text-lg font-bold text-foreground font-heading">🎤 {mainActor}の他の人気作品</h2>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">

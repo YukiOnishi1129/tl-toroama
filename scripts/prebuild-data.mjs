@@ -100,6 +100,7 @@ async function main() {
     "circles.parquet",
     "daily_recommendations.parquet",
     "sale_features.parquet",
+    "voice_actor_features.parquet",
   ];
 
   // BigIntをNumberに変換するreplacer

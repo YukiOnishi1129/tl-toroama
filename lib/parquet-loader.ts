@@ -16,6 +16,7 @@ let worksCache: DbWork[] | null = null;
 let circlesCache: DbCircle[] | null = null;
 let dailyRecommendationsCache: DbDailyRecommendation[] | null = null;
 let saleFeaturesCache: DbSaleFeature[] | null = null;
+let voiceActorFeaturesCache: DbVoiceActorFeature[] | null = null;
 
 // 型定義
 export interface DbWork {
@@ -127,6 +128,29 @@ export interface DbSaleFeature {
   ogp_image_url: string | null;
 }
 
+export interface DbVoiceActorFeature {
+  id: number;
+  name: string;
+  slug: string;
+  headline: string | null;
+  description: string | null;
+  representative_work_id: number | null;
+  representative_thumbnail_url: string | null;
+  recommended_works:
+    | { work_id: number; reason: string; target_audience: string; thumbnail_url: string | null }[]
+    | null;
+  sale_works:
+    | { work_id: number; discount_rate: number; thumbnail_url: string | null }[]
+    | null;
+  total_work_count: number;
+  solo_work_count: number;
+  avg_rating: number | null;
+  sale_count: number;
+  platform: string;
+  is_active: number;
+  posted_at: string | null;
+}
+
 /**
  * JSONキャッシュファイルを読み込む
  */
@@ -191,6 +215,23 @@ export async function getSaleFeaturesData(): Promise<DbSaleFeature[]> {
 }
 
 /**
+ * 声優特集データを取得（キャッシュ付き）
+ */
+export async function getVoiceActorFeaturesData(): Promise<
+  DbVoiceActorFeature[]
+> {
+  if (voiceActorFeaturesCache === null) {
+    voiceActorFeaturesCache = loadJson<DbVoiceActorFeature>(
+      "voice_actor_features.json"
+    );
+    console.log(
+      `Loaded ${voiceActorFeaturesCache.length} voice actor features from cache`
+    );
+  }
+  return voiceActorFeaturesCache;
+}
+
+/**
  * キャッシュをクリアする（テスト用）
  */
 export function clearCache(): void {
@@ -198,4 +239,5 @@ export function clearCache(): void {
   circlesCache = null;
   dailyRecommendationsCache = null;
   saleFeaturesCache = null;
+  voiceActorFeaturesCache = null;
 }

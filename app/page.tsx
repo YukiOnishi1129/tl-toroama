@@ -3,6 +3,10 @@ import { Footer } from "@/components/footer";
 import { HeroSaleBanner } from "@/components/hero-sale-banner";
 import { FeaturedBanners } from "@/components/featured-banners";
 import { HorizontalScrollSection } from "@/components/horizontal-scroll-section";
+import {
+  VoiceActorFeatureCarousel,
+  VoiceActorFeatureGridCarousel,
+} from "@/components/voice-actor-feature-carousel";
 import { Badge } from "@/components/ui/badge";
 import {
   getNewWorks,
@@ -19,6 +23,7 @@ import {
   getLatestDailyRecommendation,
   getWorkById,
   getWorksByIds,
+  getAllVoiceActorFeatures,
 } from "@/lib/db";
 import { dbWorkToWork, dbActorToActor, dbTagToTag } from "@/lib/types";
 import Link from "next/link";
@@ -39,6 +44,7 @@ export default async function Home() {
     dbTags,
     saleFeature,
     dailyRecommendation,
+    voiceActorFeatures,
   ] = await Promise.all([
     getSaleWorks(12),
     getNewWorks(12),
@@ -52,6 +58,7 @@ export default async function Home() {
     getTags(),
     getLatestSaleFeature(),
     getLatestDailyRecommendation(),
+    getAllVoiceActorFeatures(),
   ]);
 
   // セール特集のメイン作品のサムネイルを取得
@@ -102,6 +109,20 @@ export default async function Home() {
           recommendationThumbnail={recommendationThumbnail}
           recommendationDate={dailyRecommendation?.target_date}
         />
+
+        {/* 声優特集カルーセル */}
+        {voiceActorFeatures.length > 0 && (
+          <div className="mb-6">
+            {/* スマホ: カルーセル */}
+            <div className="md:hidden">
+              <VoiceActorFeatureCarousel voiceActorFeatures={voiceActorFeatures} />
+            </div>
+            {/* PC: 横スライドカルーセル（5カラム表示） */}
+            <div className="hidden md:block">
+              <VoiceActorFeatureGridCarousel voiceActorFeatures={voiceActorFeatures} />
+            </div>
+          </div>
+        )}
 
         {/* ボイス・ASMRランキング */}
         {voiceRanking.length > 0 && (
