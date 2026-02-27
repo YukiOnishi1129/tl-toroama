@@ -136,7 +136,10 @@ export interface DbVoiceActorFeature {
   description: string | null;
   representative_work_id: number | null;
   representative_thumbnail_url: string | null;
-  recommended_works:
+  asmr_works:
+    | { work_id: number; reason: string; target_audience: string; thumbnail_url: string | null }[]
+    | null;
+  game_works:
     | { work_id: number; reason: string; target_audience: string; thumbnail_url: string | null }[]
     | null;
   sale_works:

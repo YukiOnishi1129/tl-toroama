@@ -164,21 +164,24 @@ export default async function WorkDetailPage({ params }: Props) {
   const similarWorks = dbSimilarWorks.map(dbWorkToWork);
 
   // 声優特集のおすすめ作品を取得（自分自身を除く、最大4件）
-  const voiceActorRecommendedWorks = voiceActorFeature?.recommended_works
+  const allFeatureWorks = [
+    ...(voiceActorFeature?.asmr_works || []),
+    ...(voiceActorFeature?.game_works || []),
+  ];
+  const voiceActorRecommendedWorks = allFeatureWorks.length > 0
     ? await (async () => {
-        const recWorkIds = voiceActorFeature.recommended_works!
+        const recWorkIds = allFeatureWorks
           .map((r) => r.work_id)
           .filter((id) => id !== work.id)
           .slice(0, 4);
         if (recWorkIds.length === 0) return [];
         const dbWorks = await getWorksByIds(recWorkIds);
         const worksMap = new Map(dbWorks.map((w) => [w.id, dbWorkToWork(w)]));
-        // recommended_worksの順序を維持しつつreasonを付与
         return recWorkIds
           .map((id) => {
             const w = worksMap.get(id);
             if (!w) return null;
-            const rec = voiceActorFeature.recommended_works!.find((r) => r.work_id === id);
+            const rec = allFeatureWorks.find((r) => r.work_id === id);
             return { ...w, recommendReason: rec?.reason || null };
           })
           .filter((w): w is NonNullable<typeof w> => w !== null);

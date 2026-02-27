@@ -69,7 +69,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "声優特集 | とろあま" };
   }
 
-  const title = `${feature.name}特集 - おすすめTL・乙女作品厳選${feature.recommended_works?.length || 0}作品 | とろあま`;
+  const totalRecommended = (feature.asmr_works?.length || 0) + (feature.game_works?.length || 0);
+  const title = `${feature.name}特集 - おすすめTL・乙女作品厳選${totalRecommended}作品 | とろあま`;
   const description =
     feature.description ||
     `${feature.name}の人気TL・乙女ASMR＆ゲーム作品を厳選。迷ったらここから選べばハズレなし。`;
@@ -384,20 +385,21 @@ export default async function CVTokushuPage({ params }: Props) {
     notFound();
   }
 
-  const recommendedWorkIds = (feature.recommended_works || []).map(
-    (w) => w.work_id,
-  );
+  const asmrWorkIds = (feature.asmr_works || []).map((w) => w.work_id);
+  const gameWorkIds = (feature.game_works || []).map((w) => w.work_id);
   const saleWorkIds = (feature.sale_works || []).map((w) => w.work_id);
 
   const [
-    recommendedDbWorks,
+    asmrDbWorks,
+    gameDbWorks,
     saleDbWorks,
     allActorDbWorks,
     saleFeature,
     recommendation,
     allActorFeatures,
   ] = await Promise.all([
-    getWorksByIds(recommendedWorkIds),
+    getWorksByIds(asmrWorkIds),
+    getWorksByIds(gameWorkIds),
     getWorksByIds(saleWorkIds),
     getWorksByActor(decodedName),
     getLatestSaleFeature(),
@@ -413,18 +415,22 @@ export default async function CVTokushuPage({ params }: Props) {
     recommendationFirstWorkId ? getWorkById(recommendationFirstWorkId) : null,
   ]);
 
-  const recommendedWorks = recommendedDbWorks.map(dbWorkToWork);
+  const asmrWorks = asmrDbWorks.map(dbWorkToWork);
+  const gameWorks = gameDbWorks.map(dbWorkToWork);
   const saleWorks = saleDbWorks.map(dbWorkToWork);
 
   // 新作（おすすめ・セールと重複しない作品を最大6件）
-  const usedWorkIds = new Set([...recommendedWorkIds, ...saleWorkIds]);
+  const usedWorkIds = new Set([...asmrWorkIds, ...gameWorkIds, ...saleWorkIds]);
   const newWorks = allActorDbWorks
     .filter((w) => !usedWorkIds.has(w.id))
     .slice(0, 6)
     .map(dbWorkToWork);
 
-  const recMap = new Map(
-    (feature.recommended_works || []).map((r) => [r.work_id, r]),
+  const asmrRecMap = new Map(
+    (feature.asmr_works || []).map((r) => [r.work_id, r]),
+  );
+  const gameRecMap = new Map(
+    (feature.game_works || []).map((r) => [r.work_id, r]),
   );
 
   const saleThumbnail = saleFeatureMainWork?.thumbnail_url || null;
@@ -522,21 +528,58 @@ export default async function CVTokushuPage({ params }: Props) {
           </div>
         </div>
 
-        {/* おすすめ作品 */}
-        {recommendedWorks.length > 0 && (
+        {/* ASMR部門 */}
+        {asmrWorks.length > 0 && (
           <section className="mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <ThumbsUp className="h-5 w-5 text-primary" />
+              <Headphones className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-bold text-foreground font-heading">
-                厳選おすすめ
+                ASMR部門
               </h2>
               <Badge variant="secondary" className="text-xs">
-                {recommendedWorks.length}作品
+                {asmrWorks.length}作品
               </Badge>
             </div>
             <div className="grid gap-4">
-              {recommendedWorks.map((work, index) => {
-                const rec = recMap.get(work.id);
+              {asmrWorks.map((work, index) => {
+                const rec = asmrRecMap.get(work.id);
+                return (
+                  <RecommendationCard
+                    key={work.id}
+                    work={work}
+                    reason={
+                      rec?.reason ||
+                      work.aiRecommendReason ||
+                      "人気の作品です"
+                    }
+                    targetAudience={
+                      rec?.target_audience ||
+                      work.aiTargetAudience ||
+                      "この作品に興味がある人"
+                    }
+                    rank={index + 1}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ゲーム部門 */}
+        {gameWorks.length > 0 && (
+          <section className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Gamepad2 className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-bold text-foreground font-heading">
+                ゲーム部門
+              </h2>
+              <Badge variant="secondary" className="text-xs">
+                {gameWorks.length}作品
+              </Badge>
+            </div>
+            <div className="grid gap-4">
+              {gameWorks.map((work, index) => {
+                const rec = gameRecMap.get(work.id);
                 return (
                   <RecommendationCard
                     key={work.id}
