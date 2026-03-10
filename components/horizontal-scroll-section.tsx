@@ -50,31 +50,32 @@ function getCheaperPrice(work: Work): {
       ? Math.round(work.priceFanza * (1 - work.discountRateFanza / 100))
       : work.priceFanza;
 
+  // FANZA優先（同額ならFANZA）
   if (dlsitePrice && fanzaPrice) {
-    if (dlsitePrice <= fanzaPrice) {
+    if (fanzaPrice <= dlsitePrice) {
       return {
-        price: dlsitePrice,
-        originalPrice: dlsiteOriginal!,
-        discountRate: work.discountRateDlsite,
+        price: fanzaPrice,
+        originalPrice: fanzaOriginal!,
+        discountRate: work.discountRateFanza,
       };
     }
     return {
-      price: fanzaPrice,
-      originalPrice: fanzaOriginal!,
-      discountRate: work.discountRateFanza,
-    };
-  }
-  if (dlsitePrice && dlsiteOriginal)
-    return {
       price: dlsitePrice,
-      originalPrice: dlsiteOriginal,
+      originalPrice: dlsiteOriginal!,
       discountRate: work.discountRateDlsite,
     };
+  }
   if (fanzaPrice && fanzaOriginal)
     return {
       price: fanzaPrice,
       originalPrice: fanzaOriginal,
       discountRate: work.discountRateFanza,
+    };
+  if (dlsitePrice && dlsiteOriginal)
+    return {
+      price: dlsitePrice,
+      originalPrice: dlsiteOriginal,
+      discountRate: work.discountRateDlsite,
     };
   return null;
 }

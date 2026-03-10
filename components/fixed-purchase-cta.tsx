@@ -82,27 +82,18 @@ export function FixedPurchaseCta({
     const hasDlsite = priceDlsite != null && dlsiteUrl;
     const hasFanza = priceFanza != null && fanzaUrl;
 
+    // FANZA優先（同額ならFANZA）
     if (hasDlsite && hasFanza) {
-      if (priceDlsite <= priceFanza!) {
+      if (priceFanza! <= priceDlsite) {
         return {
-          platform: "DLsite",
-          price: priceDlsite,
-          originalPrice: originalPriceDlsite,
-          url: dlsiteUrl,
-          discountRate: discountRateDlsite,
-          saleEndDate: saleEndDateDlsite,
+          platform: "FANZA",
+          price: priceFanza!,
+          originalPrice: originalPriceFanza,
+          url: fanzaUrl,
+          discountRate: discountRateFanza,
+          saleEndDate: saleEndDateFanza,
         };
       }
-      return {
-        platform: "FANZA",
-        price: priceFanza!,
-        originalPrice: originalPriceFanza,
-        url: fanzaUrl,
-        discountRate: discountRateFanza,
-        saleEndDate: saleEndDateFanza,
-      };
-    }
-    if (hasDlsite)
       return {
         platform: "DLsite",
         price: priceDlsite,
@@ -111,6 +102,7 @@ export function FixedPurchaseCta({
         discountRate: discountRateDlsite,
         saleEndDate: saleEndDateDlsite,
       };
+    }
     if (hasFanza)
       return {
         platform: "FANZA",
@@ -119,6 +111,15 @@ export function FixedPurchaseCta({
         url: fanzaUrl,
         discountRate: discountRateFanza,
         saleEndDate: saleEndDateFanza,
+      };
+    if (hasDlsite)
+      return {
+        platform: "DLsite",
+        price: priceDlsite,
+        originalPrice: originalPriceDlsite,
+        url: dlsiteUrl,
+        discountRate: discountRateDlsite,
+        saleEndDate: saleEndDateDlsite,
       };
     return null;
   };
