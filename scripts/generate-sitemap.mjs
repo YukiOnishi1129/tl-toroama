@@ -87,9 +87,10 @@ async function fetchParquet(filename) {
 async function main() {
   console.log("Fetching data from R2 Parquet...");
 
-  const [works, circles] = await Promise.all([
+  const [works, circles, featureRecommendations] = await Promise.all([
     fetchParquet("works.parquet"),
     fetchParquet("circles.parquet"),
+    fetchParquet("feature_recommendations.parquet").catch(() => []),
   ]);
 
   // 利用可能な作品のみ
@@ -126,8 +127,11 @@ async function main() {
     .filter((c) => circleIdsWithWorks.has(c.id))
     .map((c) => c.name);
 
+  // 性癖特集スラッグ一覧
+  const featureSlugs = featureRecommendations.map((f) => f.slug);
+
   console.log(
-    `[Sitemap] Works: ${workIds.length}, Actors: ${actorNames.size}, Tags: ${tagNames.size}, Circles: ${circleNames.length}`
+    `[Sitemap] Works: ${workIds.length}, Actors: ${actorNames.size}, Tags: ${tagNames.size}, Circles: ${circleNames.length}, Features: ${featureSlugs.length}`
   );
 
   const today = new Date().toISOString().split("T")[0];
@@ -143,6 +147,7 @@ async function main() {
     { path: "/tags/", priority: "0.7", changefreq: "weekly" },
     { path: "/circles/", priority: "0.7", changefreq: "weekly" },
     { path: "/privacy/", priority: "0.3", changefreq: "monthly" },
+    { path: "/tokushu/seiheki/", priority: "0.7", changefreq: "weekly" },
   ];
 
   for (const page of staticPages) {
@@ -192,6 +197,16 @@ async function main() {
       <loc>${BASE_URL}/circles/${encodeURIComponent(name)}/</loc>
       <changefreq>weekly</changefreq>
       <priority>0.6</priority>
+    </url>`);
+  }
+
+  // 性癖特集ページ
+  for (const slug of featureSlugs) {
+    urls.push(`
+    <url>
+      <loc>${BASE_URL}/tokushu/seiheki/${encodeURIComponent(slug)}/</loc>
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
     </url>`);
   }
 

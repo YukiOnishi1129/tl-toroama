@@ -17,6 +17,7 @@ let circlesCache: DbCircle[] | null = null;
 let dailyRecommendationsCache: DbDailyRecommendation[] | null = null;
 let saleFeaturesCache: DbSaleFeature[] | null = null;
 let voiceActorFeaturesCache: DbVoiceActorFeature[] | null = null;
+let featureRecommendationsCache: DbFeatureRecommendation[] | null = null;
 
 // 型定義
 export interface DbWork {
@@ -154,6 +155,26 @@ export interface DbVoiceActorFeature {
   posted_at: string | null;
 }
 
+export interface DbFeatureRecommendation {
+  id: number;
+  slug: string;
+  name: string;
+  headline: string | null;
+  description: string | null;
+  asmr_works:
+    | { work_id: number; reason: string; target_audience: string; thumbnail_url: string | null }[]
+    | null;
+  game_works:
+    | { work_id: number; reason: string; target_audience: string; thumbnail_url: string | null }[]
+    | null;
+  thumbnail_url: string | null;
+  asmr_count: number;
+  game_count: number;
+  posted_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
 /**
  * JSONキャッシュファイルを読み込む
  */
@@ -235,6 +256,23 @@ export async function getVoiceActorFeaturesData(): Promise<
 }
 
 /**
+ * 性癖特集データを取得（キャッシュ付き）
+ */
+export async function getFeatureRecommendationsData(): Promise<
+  DbFeatureRecommendation[]
+> {
+  if (featureRecommendationsCache === null) {
+    featureRecommendationsCache = loadJson<DbFeatureRecommendation>(
+      "feature_recommendations.json"
+    );
+    console.log(
+      `Loaded ${featureRecommendationsCache.length} feature recommendations from cache`
+    );
+  }
+  return featureRecommendationsCache;
+}
+
+/**
  * キャッシュをクリアする（テスト用）
  */
 export function clearCache(): void {
@@ -243,4 +281,5 @@ export function clearCache(): void {
   dailyRecommendationsCache = null;
   saleFeaturesCache = null;
   voiceActorFeaturesCache = null;
+  featureRecommendationsCache = null;
 }

@@ -101,6 +101,7 @@ async function main() {
     "daily_recommendations.parquet",
     "sale_features.parquet",
     "voice_actor_features.parquet",
+    "feature_recommendations.parquet",
   ];
 
   // BigIntをNumberに変換するreplacer

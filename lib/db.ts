@@ -11,11 +11,13 @@ import {
   getDailyRecommendationsData,
   getSaleFeaturesData,
   getVoiceActorFeaturesData,
+  getFeatureRecommendationsData,
   type DbWork as ParquetDbWork,
   type DbCircle as ParquetDbCircle,
   type DbDailyRecommendation as ParquetDbDailyRecommendation,
   type DbSaleFeature as ParquetDbSaleFeature,
   type DbVoiceActorFeature as ParquetDbVoiceActorFeature,
+  type DbFeatureRecommendation as ParquetDbFeatureRecommendation,
 } from "./parquet-loader";
 
 // 型のエクスポート（互換性維持）
@@ -24,6 +26,7 @@ export type DbCircle = ParquetDbCircle;
 export type DbDailyRecommendation = ParquetDbDailyRecommendation;
 export type DbSaleFeature = ParquetDbSaleFeature;
 export type DbVoiceActorFeature = ParquetDbVoiceActorFeature;
+export type DbFeatureRecommendation = ParquetDbFeatureRecommendation;
 
 export interface DbActor {
   name: string;
@@ -720,6 +723,30 @@ export async function getAllVoiceActorFeatures(): Promise<
 export async function getAllVoiceActorFeatureNames(): Promise<string[]> {
   const features = await getVoiceActorFeaturesData();
   return features.filter((f) => f.is_active === 1).map((f) => f.name);
+}
+
+// slugで性癖特集データを取得
+export async function getFeatureRecommendationBySlug(
+  slug: string,
+): Promise<DbFeatureRecommendation | null> {
+  const features = await getFeatureRecommendationsData();
+  return features.find((f) => f.slug === slug) || null;
+}
+
+// 全性癖特集データを取得（作品数順）
+export async function getAllFeatureRecommendations(): Promise<
+  DbFeatureRecommendation[]
+> {
+  const features = await getFeatureRecommendationsData();
+  return features.sort(
+    (a, b) => (b.asmr_count + b.game_count) - (a.asmr_count + a.game_count),
+  );
+}
+
+// 全性癖特集slugを取得（generateStaticParams用）
+export async function getAllFeatureRecommendationSlugs(): Promise<string[]> {
+  const features = await getFeatureRecommendationsData();
+  return features.map((f) => f.slug);
 }
 
 // DB接続を閉じる（互換性のためのスタブ）
