@@ -87,18 +87,37 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -p ${SSH_PORT} ${SSH_HOST} >> ~/.ssh/known_hosts
 
-      - name: Deploy via rsync
+      - name: Deploy via rsync (split)
         id: deploy
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
         run: |
+          SSH_OPTS="-e ssh -p ${SSH_PORT} -o ServerAliveInterval=60 -o ServerAliveCountMax=10"
+          REMOTE="${SSH_USERNAME}@${SSH_HOST}:~/tl-toroama.com/public_html"
+
+          # 大きいディレクトリを個別に転送
+          for dir in works cv _next; do
+            if [ -d "out/${dir}" ]; then
+              echo "=== Syncing ${dir}/ ==="
+              rsync -avz --delete \
+                -e "ssh -p ${SSH_PORT} -o ServerAliveInterval=60 -o ServerAliveCountMax=10" \
+                ./out/${dir}/ \
+                ${REMOTE}/${dir}/
+            fi
+          done
+
+          # 残りのトップレベルファイル・ディレクトリを転送
+          echo "=== Syncing top-level files ==="
           rsync -avz --delete \
             --exclude 'api/' \
+            --exclude 'works/' \
+            --exclude 'cv/' \
+            --exclude '_next/' \
             -e "ssh -p ${SSH_PORT} -o ServerAliveInterval=60 -o ServerAliveCountMax=10" \
             ./out/ \
-            ${SSH_USERNAME}@${SSH_HOST}:~/tl-toroama.com/public_html/
+            ${REMOTE}/
 
       - name: Calculate duration
         if: ${{ always() }}
