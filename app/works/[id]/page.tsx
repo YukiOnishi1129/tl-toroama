@@ -23,6 +23,7 @@ import {
   getWorksByIds,
 } from "@/lib/db";
 import { dbWorkToWork } from "@/lib/types";
+import { ProductJsonLd, ReviewJsonLd, BreadcrumbJsonLd } from "@/components/json-ld";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -82,9 +83,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? `【${work.maxDiscountRate}%OFF】`
       : "";
   const actorSuffix = work.actors.length > 0 ? `（${work.actors[0]}）` : "";
-  const title = `${salePrefix}${work.title}${actorSuffix} | とろあま`;
+  const title = `${salePrefix}${work.title}${actorSuffix} レビュー・感想 | とろあま`;
 
-  const ratingText = work.ratingDlsite ? `評価${work.ratingDlsite.toFixed(1)}` : "";
+  const ratingText = work.ratingDlsite ? `★${work.ratingDlsite.toFixed(1)}` : "";
+  const saleText = work.isOnSale && work.maxDiscountRate ? `${work.maxDiscountRate}%OFF セール中` : "";
   const categoryLabel = getCategoryLabel(work.genre, work.category);
   const metaParts = [
     categoryLabel,
@@ -92,11 +94,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     work.circleName ? `サークル:${work.circleName}` : null,
   ].filter(Boolean);
   const metaSuffix = metaParts.length > 0 ? `【${metaParts.join("｜")}】` : "";
+  const leadParts = [ratingText, saleText].filter(Boolean).join("／");
+  const leadPrefix = leadParts ? `${leadParts}｜` : "";
   const baseDescription =
     work.aiAppealPoints || work.aiRecommendReason || work.aiSummary || "";
   const description = baseDescription
-    ? `${ratingText ? `${ratingText}の` : ""}${baseDescription}${metaSuffix}`
-    : `${work.title}の価格比較・セール情報・レビューをチェック${metaSuffix}`;
+    ? `${leadPrefix}${baseDescription}${metaSuffix}`
+    : `${leadPrefix}${work.title}の価格比較・セール情報・レビューをチェック${metaSuffix}`;
 
   const ogImage = work.thumbnailUrl || work.sampleImages[0] || null;
 
@@ -209,6 +213,9 @@ export default async function WorkDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background pb-32 md:pb-0">
+      <ProductJsonLd work={work} />
+      <ReviewJsonLd work={work} />
+      <BreadcrumbJsonLd items={breadcrumbItems} />
       <Header />
 
       {/* セール中スティッキーバナー（モバイル） */}

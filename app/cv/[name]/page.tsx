@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "声優が見つかりません | とろあま" };
   }
 
-  const title = `${decodedName}の出演作品（${dbWorks.length}作品） | とろあま`;
+  const title = `${decodedName}の出演作品レビュー（${dbWorks.length}作品） | とろあま`;
   const description = `声優「${decodedName}」のTL・乙女向けASMR＆ゲーム作品${dbWorks.length}作品を掲載。`;
 
   return { title, description };
