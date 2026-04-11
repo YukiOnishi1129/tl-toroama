@@ -70,10 +70,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const totalRecommended = (feature.asmr_works?.length || 0) + (feature.game_works?.length || 0);
-  const title = `${feature.name}特集 - おすすめTL・乙女作品レビュー厳選${totalRecommended}作品 | とろあま`;
+  const title = `${feature.name}特集 - おすすめ女性向け作品レビュー厳選${totalRecommended}作品 | とろあま`;
   const description =
     feature.description ||
-    `${feature.name}の人気TL・乙女ASMR＆ゲーム作品を厳選。迷ったらここから選べばハズレなし。`;
+    `${feature.name}の人気女性向けASMR＆ゲーム作品を厳選。迷ったらここから選べばハズレなし。`;
   const ogImage = feature.representative_thumbnail_url || undefined;
   const keywords = [
     feature.name,
@@ -81,7 +81,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `${feature.name} TL`,
     `${feature.name} おすすめ`,
     `${feature.name} 乙女`,
-    "TL ASMR",
+    "女性向け ASMR",
     "乙女ゲーム",
     "声優",
     feature.platform === "dlsite" ? "DLsite" : "FANZA",
@@ -515,7 +515,7 @@ export default async function CVTokushuPage({ params }: Props) {
             </div>
             <p className="text-base font-bold text-foreground">
               {feature.headline ||
-                `${feature.name}のTL・乙女作品、厳選おすすめ`}
+                `${feature.name}の女性向け作品、厳選おすすめ`}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
               {feature.description ||

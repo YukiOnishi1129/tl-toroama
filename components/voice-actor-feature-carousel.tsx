@@ -53,7 +53,7 @@ function CarouselItem({ feature }: { feature: DbVoiceActorFeature }) {
                   style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}
                 >
                   {feature.headline ||
-                    `${feature.name}のおすすめTL・乙女作品`}
+                    `${feature.name}のおすすめ女性向け作品`}
                 </p>
               </div>
             </div>

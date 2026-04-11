@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const title = `${decodedName}の出演作品レビュー（${dbWorks.length}作品） | とろあま`;
-  const description = `声優「${decodedName}」のTL・乙女向けASMR＆ゲーム作品${dbWorks.length}作品を掲載。`;
+  const description = `声優「${decodedName}」の女性向けASMR＆ゲーム作品${dbWorks.length}作品を掲載。`;
 
   return { title, description };
 }
@@ -96,7 +96,7 @@ export default async function CVDetailPage({ params }: Props) {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-base font-bold text-white mb-1" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
-                          {voiceActorFeature.headline || `${decodedName}のおすすめTL・乙女作品`}
+                          {voiceActorFeature.headline || `${decodedName}のおすすめ女性向け作品`}
                         </p>
                         <div className="flex items-center gap-3 text-sm text-white/80" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                           {voiceActorFeature.avg_rating && (
@@ -129,7 +129,7 @@ export default async function CVDetailPage({ params }: Props) {
                       </Badge>
                     </div>
                     <p className="text-sm font-bold text-foreground mb-1">
-                      {voiceActorFeature.headline || `${decodedName}のおすすめTL・乙女作品`}
+                      {voiceActorFeature.headline || `${decodedName}のおすすめ女性向け作品`}
                     </p>
                   </div>
                   <ChevronRight className="h-5 w-5 text-primary shrink-0" />

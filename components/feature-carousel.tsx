@@ -82,7 +82,7 @@ function UnifiedCarouselItem({ item }: { item: UnifiedFeatureItem }) {
   const textColor = isVoiceActor ? "text-primary" : "text-purple-500";
   const Icon = isVoiceActor ? Mic : Sparkles;
   const label = `${item.name}特集`;
-  const defaultHeadline = isVoiceActor ? `${item.name}のおすすめTL・乙女作品` : `${item.name}作品を厳選`;
+  const defaultHeadline = isVoiceActor ? `${item.name}のおすすめ女性向け作品` : `${item.name}作品を厳選`;
 
   return (
     <Link href={item.href}>

@@ -67,10 +67,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const totalRecommended = (feature.asmr_works?.length || 0) + (feature.game_works?.length || 0);
-  const title = `${feature.name}特集 - おすすめTL作品厳選${totalRecommended}作品 | とろあま`;
+  const title = `${feature.name}特集 - おすすめ女性向け作品厳選${totalRecommended}作品 | とろあま`;
   const description =
     feature.description ||
-    `${feature.name}のTL・乙女ASMR＆ゲーム作品を厳選。迷ったらここから選べばハズレなし。`;
+    `${feature.name}の女性向けASMR＆ゲーム作品を厳選。迷ったらここから選べばハズレなし。`;
   const ogImage = feature.thumbnail_url || undefined;
   const keywords = [
     feature.name,
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `${feature.name} ASMR`,
     `${feature.name} おすすめ`,
     `${feature.name} 乙女`,
-    "TL ASMR",
+    "女性向け ASMR",
     "乙女ゲーム",
   ];
 

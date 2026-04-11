@@ -13,7 +13,7 @@ export function Header() {
             <span className="rounded bg-muted px-1 py-0.5 text-[10px] font-normal text-muted-foreground">PR</span>
           </span>
           <span className="text-[9px] text-muted-foreground md:text-[10px]">
-            TL・乙女向けASMR＆ゲームまとめ
+            女性向けASMR＆ゲームまとめ
           </span>
         </Link>
 

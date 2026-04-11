@@ -30,11 +30,11 @@ import {
 export const metadata: Metadata = {
   title: "今日のおすすめ | とろあま",
   description:
-    "編集部が厳選した今日のおすすめTL・乙女向けASMR＆ゲーム作品。TOP5をご紹介。",
+    "編集部が厳選した今日のおすすめ女性向けASMR＆ゲーム作品。TOP5をご紹介。",
   openGraph: {
     title: "今日のおすすめ | とろあま",
     description:
-      "編集部が厳選した今日のおすすめTL・乙女向けASMR＆ゲーム作品。TOP5をご紹介。",
+      "編集部が厳選した今日のおすすめ女性向けASMR＆ゲーム作品。TOP5をご紹介。",
     type: "website",
     images: [
       {
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "今日のおすすめ | とろあま",
     description:
-      "編集部が厳選した今日のおすすめTL・乙女向けASMR＆ゲーム作品。TOP5をご紹介。",
+      "編集部が厳選した今日のおすすめ女性向けASMR＆ゲーム作品。TOP5をご紹介。",
     images: ["/ogp/recommendation_ogp.png"],
   },
 };

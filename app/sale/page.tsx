@@ -17,18 +17,18 @@ import { Flame } from "lucide-react";
 export const metadata: Metadata = {
   title: "セール中の作品一覧 | とろあま",
   description:
-    "今お得に買えるTL・乙女向けASMR＆ゲーム作品をまとめてチェック。割引率・価格順で並び替え可能。",
+    "今お得に買える女性向けASMR＆ゲーム作品をまとめてチェック。割引率・価格順で並び替え可能。",
   openGraph: {
     title: "セール中の作品一覧 | とろあま",
     description:
-      "今お得に買えるTL・乙女向けASMR＆ゲーム作品をまとめてチェック。",
+      "今お得に買える女性向けASMR＆ゲーム作品をまとめてチェック。",
     type: "website",
   },
   twitter: {
     card: "summary",
     title: "セール中の作品一覧 | とろあま",
     description:
-      "今お得に買えるTL・乙女向けASMR＆ゲーム作品をまとめてチェック。",
+      "今お得に買える女性向けASMR＆ゲーム作品をまとめてチェック。",
   },
 };
 

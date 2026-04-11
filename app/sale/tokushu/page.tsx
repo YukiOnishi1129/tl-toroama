@@ -31,8 +31,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const title = "セール特集 | とろあま";
   const description = saleFeature?.main_headline
-    ? `${saleFeature.main_headline} - セール中のおすすめTL・乙女作品を厳選。迷ったらここから選べばハズレなし。`
-    : "今お得に買えるTL・乙女向けASMR＆ゲーム作品をまとめてチェック。割引率・価格順で並び替え可能。";
+    ? `${saleFeature.main_headline} - セール中のおすすめ女性向け作品を厳選。迷ったらここから選べばハズレなし。`
+    : "今お得に買える女性向けASMR＆ゲーム作品をまとめてチェック。割引率・価格順で並び替え可能。";
 
   const ogpImageUrl = saleFeature?.ogp_image_url || undefined;
 
