@@ -149,7 +149,6 @@ async function main() {
 </urlset>
 `;
 
-  mkdirSync("public", { recursive: true });
   writeFileSync("public/sitemap.xml", sitemap);
   console.log(`[Sitemap] Generated with ${urls.length} URLs`);
 }
