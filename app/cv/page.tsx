@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Breadcrumb } from "@/components/breadcrumb";
@@ -7,6 +8,12 @@ import { getActors, getAllVoiceActorFeatures } from "@/lib/db";
 import { dbActorToActor } from "@/lib/types";
 import { Mic, ChevronRight } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "声優一覧 | とろあま",
+  description: "女性向けASMR＆ゲームの人気声優一覧。声優から作品を探せます。",
+  alternates: { canonical: "/cv/" },
+};
 
 export const dynamic = "force-static";
 

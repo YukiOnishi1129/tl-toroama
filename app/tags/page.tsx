@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Breadcrumb } from "@/components/breadcrumb";
@@ -5,6 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { getTags } from "@/lib/db";
 import { dbTagToTag } from "@/lib/types";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "タグ一覧 | とろあま",
+  description: "女性向けASMR＆ゲームのタグ一覧。ジャンルから作品を探せます。",
+  alternates: { canonical: "/tags/" },
+};
 
 export const dynamic = "force-static";
 

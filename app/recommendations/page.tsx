@@ -31,6 +31,7 @@ export const metadata: Metadata = {
   title: "今日のおすすめ | とろあま",
   description:
     "編集部が厳選した今日のおすすめ女性向けASMR＆ゲーム作品。TOP5をご紹介。",
+  alternates: { canonical: "/recommendations/" },
   openGraph: {
     title: "今日のおすすめ | とろあま",
     description:

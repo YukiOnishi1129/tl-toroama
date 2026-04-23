@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   title: "性癖特集一覧 - おすすめ女性向け作品をジャンル別に厳選 | とろあま",
   description:
     "ラブラブ、年上、連続絶頂、幼なじみ…人気の性癖・シチュエーション別にTL作品を厳選。あなたの推し性癖から迷わず作品を選べます。",
+  alternates: { canonical: "/tokushu/seiheki/" },
   openGraph: {
     title: "性癖特集一覧 - おすすめ女性向け作品をジャンル別に厳選 | とろあま",
     description:

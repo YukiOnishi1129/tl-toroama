@@ -9,6 +9,11 @@ import {
 } from "@/components/feature-carousel";
 import { Badge } from "@/components/ui/badge";
 import { SisterSiteBanner } from "@/components/sister-site-banner";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 import {
   getNewWorks,
   getSaleWorks,

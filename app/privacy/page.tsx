@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Breadcrumb } from "@/components/breadcrumb";
+
+export const metadata: Metadata = {
+  title: "プライバシーポリシー | とろあま",
+  alternates: { canonical: "/privacy/" },
+};
 
 export const dynamic = "force-static";
 

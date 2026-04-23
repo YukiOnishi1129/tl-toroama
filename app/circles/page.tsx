@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Breadcrumb } from "@/components/breadcrumb";
@@ -5,6 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { getCircles } from "@/lib/db";
 import { dbCircleToCircle } from "@/lib/types";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "サークル一覧 | とろあま",
+  description: "女性向けASMR＆ゲーム作品を手掛けるサークル一覧。",
+  alternates: { canonical: "/circles/" },
+};
 
 export const dynamic = "force-static";
 

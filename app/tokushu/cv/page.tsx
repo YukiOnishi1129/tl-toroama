@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   title: "人気声優特集一覧 - おすすめ女性向け作品厳選 | とろあま",
   description:
     "人気声優の女性向けASMR＆ゲーム作品特集一覧。各声優のおすすめ作品を厳選して紹介。迷ったらここから選べばハズレなし。",
+  alternates: { canonical: "/tokushu/cv/" },
   openGraph: {
     title: "人気声優特集一覧 - おすすめ女性向け作品厳選 | とろあま",
     description:

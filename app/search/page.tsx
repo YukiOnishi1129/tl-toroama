@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { SearchContent } from "@/components/search-content";
@@ -9,6 +10,13 @@ import {
   getVoiceRankingWorks,
   getSaleWorks,
 } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "作品検索 | とろあま",
+  description: "女性向けASMR＆ゲーム作品を検索。タイトル、声優、タグで絞り込み。",
+  alternates: { canonical: "/search/" },
+  robots: { index: false, follow: true },
+};
 
 export const dynamic = "force-static";
 

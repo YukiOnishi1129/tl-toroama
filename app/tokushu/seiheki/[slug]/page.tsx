@@ -87,6 +87,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     keywords,
+    alternates: { canonical: `/tokushu/seiheki/${slug}/` },
     openGraph: {
       title,
       description,
