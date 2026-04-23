@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { SisterSiteBanner } from "@/components/sister-site-banner";
 import {
   getFeatureRecommendationBySlug,
   getAllFeatureRecommendationSlugs,
@@ -588,6 +589,9 @@ export default async function SeihekiTokushuPage({ params }: Props) {
             recommendationDate={recommendationDate}
           />
         </section>
+
+        {/* 姉妹サイトバナー */}
+        <SisterSiteBanner />
       </main>
 
       <Footer />

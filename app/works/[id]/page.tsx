@@ -9,6 +9,7 @@ import { SaleBannerCountdown } from "@/components/sale-banner-countdown";
 import { FixedPurchaseCta } from "@/components/fixed-purchase-cta";
 import { SampleImageGallery } from "@/components/sample-image-gallery";
 import { HeroImage } from "@/components/hero-image";
+import { SisterSiteBanner } from "@/components/sister-site-banner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -805,6 +806,9 @@ export default async function WorkDetailPage({ params }: Props) {
             </section>
           )}
         </div>
+
+        {/* 姉妹サイトバナー */}
+        <SisterSiteBanner />
       </main>
 
       <Footer />
