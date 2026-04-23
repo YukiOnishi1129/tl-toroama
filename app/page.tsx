@@ -8,6 +8,7 @@ import {
   FeatureGridCarousel,
 } from "@/components/feature-carousel";
 import { Badge } from "@/components/ui/badge";
+import { SisterSiteBanner } from "@/components/sister-site-banner";
 import {
   getNewWorks,
   getSaleWorks,
@@ -274,6 +275,9 @@ export default async function Home() {
             </div>
           </section>
         )}
+
+        {/* 姉妹サイトバナー */}
+        <SisterSiteBanner />
       </main>
 
       <Footer />
