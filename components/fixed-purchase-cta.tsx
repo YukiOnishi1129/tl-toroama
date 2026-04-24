@@ -183,6 +183,7 @@ export function FixedPurchaseCta({
                 window.gtag("event", `${platform}_click`, {
                   product_id: productId,
                   source: "fixed_cta",
+                  transport_type: "beacon",
                 });
               }
             }}
