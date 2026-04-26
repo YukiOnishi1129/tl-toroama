@@ -4,6 +4,12 @@ import Link from "next/link";
 import { Home, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+export const metadata = {
+  title: "ページが見つかりません",
+  description: "お探しのページは移動または削除された可能性があります。トップページや人気作品から探してください。",
+  robots: { index: false, follow: true },
+};
+
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-background">
