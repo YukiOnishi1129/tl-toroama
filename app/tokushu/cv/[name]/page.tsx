@@ -67,14 +67,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const feature = await getVoiceActorFeatureByName(decodedName);
 
   if (!feature) {
-    return { title: "声優特集 | とろあま" };
+    return { title: "声優特集" };
   }
 
   const totalRecommended = (feature.asmr_works?.length || 0) + (feature.game_works?.length || 0);
-  const title = `${feature.name}特集 - おすすめ女性向け作品レビュー厳選${totalRecommended}作品 | とろあま`;
-  const description =
+  const year = new Date().getFullYear();
+  // layout.tsx の template "%s | とろあま" が自動付与される
+  const title = `【${year}年最新】${feature.name}特集 女性向けASMR・乙女ゲーム出演作おすすめ${totalRecommended}選`;
+  const baseDesc =
     feature.description ||
-    `${feature.name}の人気女性向けASMR＆ゲーム作品を厳選。迷ったらここから選べばハズレなし。`;
+    `${feature.name}の人気女性向けASMR・TL・乙女ゲーム作品を厳選レビュー。迷ったらここから選べばハズレなし。`;
+  const description = `【${year}年最新】声優${feature.name}の出演作${totalRecommended}選。${baseDesc}DLsite・FANZAで人気の評価・あらすじ・感想を毎日更新。`.slice(0, 160);
   const ogImage = feature.representative_thumbnail_url || undefined;
   const keywords = [
     feature.name,

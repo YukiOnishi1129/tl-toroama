@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { WorkGridWithLoadMore } from "@/components/work-grid-with-load-more";
 import { Badge } from "@/components/ui/badge";
+import { BreadcrumbJsonLd } from "@/components/json-ld";
 import { getWorksByTag, getAllTagNames, getRelatedTags } from "@/lib/db";
 import { dbWorkToWork } from "@/lib/types";
 import { notFound } from "next/navigation";
@@ -21,13 +22,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dbWorks = await getWorksByTag(decodedName);
 
   if (dbWorks.length === 0) {
-    return { title: "タグが見つかりません | とろあま" };
+    return { title: "タグが見つかりません" };
   }
 
-  const title = `「${decodedName}」タグの作品レビュー（${dbWorks.length}作品） | とろあま`;
-  const description = `「${decodedName}」タグの女性向けASMR＆ゲーム作品${dbWorks.length}作品を掲載。`;
+  const works = dbWorks.map(dbWorkToWork);
+  const ratedWorks = works.filter((w) => w.ratingDlsite !== null && w.ratingDlsite !== undefined);
+  const avgRating =
+    ratedWorks.length > 0
+      ? (ratedWorks.reduce((s, w) => s + (w.ratingDlsite ?? 0), 0) / ratedWorks.length).toFixed(1)
+      : null;
+  const saleCount = works.filter((w) => w.isOnSale).length;
+  const topCircles = Array.from(
+    new Set(works.slice(0, 10).map((w) => w.circleName).filter(Boolean))
+  ).slice(0, 5);
 
-  return { title, description, alternates: { canonical: `/tags/${name}/` } };
+  // layout.tsx の template "%s | とろあま" が自動付与される
+  const title = `${decodedName}の女性向けASMR・乙女ゲームおすすめ${dbWorks.length}選 レビュー・感想・セール情報`;
+  const ratingText = avgRating ? `平均評価★${avgRating}。` : "";
+  const saleText = saleCount > 0 ? `セール中${saleCount}作品。` : "";
+  const circleText = topCircles.length > 0 ? `人気サークルは${topCircles.join("・")}など。` : "";
+  const description = `「${decodedName}」ジャンルの女性向けASMR・TL・乙女ゲーム${dbWorks.length}作品を厳選レビュー。${ratingText}${saleText}${circleText}DLsite・FANZAで人気の${decodedName}作品の評価・あらすじ・感想を毎日更新。`.slice(0, 160);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/tags/${name}/` },
+    openGraph: { title, description, type: "website" },
+  };
 }
 
 export async function generateStaticParams() {
@@ -54,24 +75,59 @@ export default async function TagDetailPage({ params }: Props) {
   const limitedDbWorks = dbWorks.slice(0, MAX_SSG_WORKS);
   const works = limitedDbWorks.map(dbWorkToWork);
 
+  const allWorks = dbWorks.map(dbWorkToWork);
+  const ratedWorks = allWorks.filter((w) => w.ratingDlsite !== null && w.ratingDlsite !== undefined);
+  const avgRating =
+    ratedWorks.length > 0
+      ? ratedWorks.reduce((s, w) => s + (w.ratingDlsite ?? 0), 0) / ratedWorks.length
+      : null;
+  const saleCount = allWorks.filter((w) => w.isOnSale).length;
+  const topCircles = Array.from(
+    new Set(allWorks.slice(0, 10).map((w) => w.circleName).filter(Boolean))
+  ).slice(0, 5);
+
+  const breadcrumbItems = [
+    { label: "トップ", href: "/" },
+    { label: "タグ", href: "/tags" },
+    { label: decodedName },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <BreadcrumbJsonLd items={breadcrumbItems} />
       <Header />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
-        <Breadcrumb
-          items={[
-            { label: "トップ", href: "/" },
-            { label: "タグ", href: "/tags" },
-            { label: decodedName },
-          ]}
-        />
+        <Breadcrumb items={breadcrumbItems} />
 
-        <h1 className="mb-2 text-2xl font-bold text-foreground font-heading">
-          {decodedName}
+        <h1 className="mb-1 text-2xl font-bold text-foreground font-heading">
+          #{decodedName} の女性向けASMR・乙女ゲームおすすめ{totalCount}選
         </h1>
-        <p className="mb-6 text-sm text-muted-foreground">
-          {totalCount}作品
+        <p className="mb-3 text-sm text-muted-foreground">
+          {totalCount}作品 / レビュー・感想・セール情報
+        </p>
+        {/* SEOリード文 */}
+        <p className="mb-6 text-sm leading-relaxed text-muted-foreground">
+          「<span className="font-semibold text-foreground">{decodedName}</span>」ジャンルの女性向けASMR・TL・乙女ゲーム作品
+          <span className="font-semibold text-foreground">{totalCount}作品</span>を厳選レビュー。
+          {avgRating !== null && (
+            <>
+              平均評価
+              <span className="font-semibold text-foreground">★{avgRating.toFixed(1)}</span>
+              。
+            </>
+          )}
+          {saleCount > 0 && (
+            <>
+              現在<span className="font-semibold text-foreground">{saleCount}作品がセール中</span>。
+            </>
+          )}
+          {topCircles.length > 0 && (
+            <>
+              人気サークルは<span className="text-foreground">{topCircles.join("・")}</span>など。
+            </>
+          )}
+          DLsite・FANZAで人気の{decodedName}ジャンル作品の評価・あらすじ・感想を毎日更新中。
         </p>
 
         {/* 関連タグ */}

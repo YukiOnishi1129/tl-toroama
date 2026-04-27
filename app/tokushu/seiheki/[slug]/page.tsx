@@ -64,14 +64,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const feature = await getFeatureRecommendationBySlug(slug);
 
   if (!feature) {
-    return { title: "性癖特集 | とろあま" };
+    return { title: "性癖特集" };
   }
 
   const totalRecommended = (feature.asmr_works?.length || 0) + (feature.game_works?.length || 0);
-  const title = `${feature.name}特集 - おすすめ女性向け作品厳選${totalRecommended}作品 | とろあま`;
-  const description =
+  const year = new Date().getFullYear();
+  // layout.tsx の template "%s | とろあま" が自動付与される
+  const title = `【${year}年最新】${feature.name}特集 女性向けASMR・乙女ゲームおすすめ${totalRecommended}選`;
+  const baseDesc =
     feature.description ||
-    `${feature.name}の女性向けASMR＆ゲーム作品を厳選。迷ったらここから選べばハズレなし。`;
+    `${feature.name}の女性向けASMR・TL・乙女ゲーム作品を厳選レビュー。迷ったらここから選べばハズレなし。`;
+  const description = `【${year}年最新】${feature.name}ジャンルの厳選${totalRecommended}作品。${baseDesc}DLsite・FANZAで人気の評価・あらすじ・感想を毎日更新。`.slice(0, 160);
   const ogImage = feature.thumbnail_url || undefined;
   const keywords = [
     feature.name,

@@ -21,7 +21,10 @@ const notoSansJP = Noto_Sans_JP({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tl-toroama.com"),
-  title: "とろあま | 女性向けASMR＆ゲームまとめ",
+  title: {
+    default: "とろあま | 女性向けASMR＆ゲームまとめ",
+    template: "%s | とろあま",
+  },
   description:
     "女性向けASMR・TL・乙女ゲームの厳選作品を紹介。評価・ランキング・セール情報もまとめてチェック。",
   icons: {

@@ -44,6 +44,14 @@ function getCategoryLabel(genre: string | null | undefined, category: string | n
   return category || null;
 }
 
+function sanitizeTitleForSeo(title: string): string {
+  return title
+    .replace(/【[^】]*?(?:%OFF|OFF|セール|期間限定|キャンペーン|割引|円OFF|円引)[^】]*?】/gi, "")
+    .replace(/\[[^\]]*?(?:%OFF|OFF|sale|セール)[^\]]*?\]/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function getCtaLabel(genre: string | null | undefined, category: string | null | undefined): string {
   if (genre) {
     if (genre.includes("音声")) return "🎧 試聴してみる";
@@ -74,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dbWork = await getWork(id);
 
   if (!dbWork) {
-    return { title: "作品が見つかりません | とろあま" };
+    return { title: "作品が見つかりません" };
   }
 
   const work = dbWorkToWork(dbWork);
@@ -83,25 +91,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     work.isOnSale && work.maxDiscountRate
       ? `【${work.maxDiscountRate}%OFF】`
       : "";
-  const actorSuffix = work.actors.length > 0 ? `（${work.actors[0]}）` : "";
-  const title = `${salePrefix}${work.title}${actorSuffix} レビュー・感想 | とろあま`;
+  const cleanTitle = sanitizeTitleForSeo(work.title);
+  const categoryLabel = getCategoryLabel(work.genre, work.category);
+  const titleSuffixParts = [
+    categoryLabel === "ASMR" ? "女性向けASMR" : categoryLabel === "ゲーム" ? "乙女ゲーム" : null,
+    work.actors.length > 0 ? `CV:${work.actors[0]}` : null,
+  ].filter(Boolean);
+  const titleSuffix = titleSuffixParts.length > 0 ? `【${titleSuffixParts.join("｜")}】` : "";
+  // layout.tsx の template "%s | とろあま" が自動付与される
+  const title = `${salePrefix}${cleanTitle}${titleSuffix} レビュー・感想`;
 
   const ratingText = work.ratingDlsite ? `★${work.ratingDlsite.toFixed(1)}` : "";
-  const saleText = work.isOnSale && work.maxDiscountRate ? `${work.maxDiscountRate}%OFF セール中` : "";
-  const categoryLabel = getCategoryLabel(work.genre, work.category);
-  const metaParts = [
-    categoryLabel,
-    work.actors.length > 0 ? `CV:${work.actors.join("・")}` : null,
-    work.circleName ? `サークル:${work.circleName}` : null,
-  ].filter(Boolean);
-  const metaSuffix = metaParts.length > 0 ? `【${metaParts.join("｜")}】` : "";
-  const leadParts = [ratingText, saleText].filter(Boolean).join("／");
-  const leadPrefix = leadParts ? `${leadParts}｜` : "";
+  const saleText = work.isOnSale && work.maxDiscountRate ? `${work.maxDiscountRate}%OFF` : "";
+  const priceText = work.priceDlsite ? `¥${work.priceDlsite.toLocaleString()}` : "";
+  const detailParts = [ratingText, priceText, saleText].filter(Boolean).join("｜");
+  const leadCore = `${work.circleName ? `${work.circleName}の` : ""}${categoryLabel === "ASMR" ? "女性向けASMR" : categoryLabel === "ゲーム" ? "乙女ゲーム" : "TL・乙女向け作品"}レビュー。`;
   const baseDescription =
-    work.aiAppealPoints || work.aiRecommendReason || work.aiSummary || "";
-  const description = baseDescription
-    ? `${leadPrefix}${baseDescription}${metaSuffix}`
-    : `${leadPrefix}${work.title}の価格比較・セール情報・レビューをチェック${metaSuffix}`;
+    work.aiAppealPoints || work.aiRecommendReason || work.aiSummary || `${cleanTitle}の評価・あらすじ・購入者の感想をまとめました。`;
+  const description = `${leadCore}${baseDescription}${detailParts ? `★${detailParts}` : ""}`.slice(0, 160);
 
   const ogImage = work.thumbnailUrl || work.sampleImages[0] || null;
 
@@ -298,7 +305,48 @@ export default async function WorkDetailPage({ params }: Props) {
               })()}
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground font-heading">{work.title}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground font-heading">
+              {work.title}
+              <span className="block mt-1 text-sm md:text-base font-medium text-muted-foreground">
+                {(() => {
+                  const cat = getCategoryLabel(work.genre, work.category);
+                  const genreLabel = cat === "ASMR" ? "女性向けASMR" : cat === "ゲーム" ? "乙女ゲーム" : "TL・乙女向け作品";
+                  const parts: string[] = [genreLabel];
+                  if (work.actors[0]) parts.push(`CV ${work.actors[0]}`);
+                  if (work.circleName) parts.push(work.circleName);
+                  return parts.join(" / ") + " レビュー・感想・セール情報";
+                })()}
+              </span>
+            </h1>
+
+            {/* SEOリード文 */}
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {work.circleName && (
+                <>
+                  サークル<span className="font-semibold text-foreground">「{work.circleName}」</span>の
+                </>
+              )}
+              {(() => {
+                const cat = getCategoryLabel(work.genre, work.category);
+                return cat === "ASMR" ? "女性向けASMR作品" : cat === "ゲーム" ? "乙女ゲーム作品" : "TL・乙女向け作品";
+              })()}
+              「<span className="font-semibold text-foreground">{work.title}</span>」のレビュー・感想・セール情報をまとめてチェック。
+              {work.actors.length > 0 && (
+                <>
+                  CV<span className="font-semibold text-foreground">{work.actors.join("・")}</span>。
+                </>
+              )}
+              {work.ratingDlsite && (
+                <>
+                  ユーザー評価<span className="font-semibold text-foreground">★{work.ratingDlsite.toFixed(1)}</span>
+                  {work.reviewCountDlsite ? `（${work.reviewCountDlsite}件のレビュー）` : ""}。
+                </>
+              )}
+              {work.isOnSale && work.maxDiscountRate && (
+                <span className="font-semibold text-sale">現在{work.maxDiscountRate}%OFFセール中。</span>
+              )}
+              DLsite・FANZAの最新価格を比較できます。
+            </p>
 
             {work.circleName && (
               <p>
@@ -487,7 +535,11 @@ export default async function WorkDetailPage({ params }: Props) {
                 <CardTitle className="text-sm font-bold text-foreground">📝 とろあま編集部レビュー</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-foreground leading-relaxed">{work.aiReview}</p>
+                <div className="space-y-3 text-foreground leading-relaxed">
+                  {work.aiReview.split(/\n\n+/).map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           )}
